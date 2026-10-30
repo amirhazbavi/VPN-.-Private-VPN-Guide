@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>راهنمای ساخت فیلترشکن خصوصی | Private VPN Guide</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #111827;
+    --text: #e5e7eb;
+    --muted: #9ca3af;
+    --accent: #38bdf8;
+    --accent2: #22c55e;
+    --border: #334155;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Tahoma, Arial, "Segoe UI", sans-serif;
+    background: linear-gradient(180deg, #020617, var(--bg));
+    color: var(--text);
+    line-height: 1.8;
+  }
+  .wrap { max-width: 1050px; margin: 0 auto; padding: 24px 16px 60px; }
+  header {
+    background: rgba(17, 24, 39, 0.9);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  }
+  h1 { margin: 0 0 8px; font-size: 1.6rem; color: #fff; }
+  .sub { color: var(--muted); margin: 0; font-size: 0.95rem; }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 18px 0 0;
+  }
+  .lang-btn {
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: #0b1220;
+    color: var(--text);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    transition: 0.2s;
+  }
+  .lang-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .lang-btn.active {
+    background: var(--accent);
+    color: #001018;
+    border-color: var(--accent);
+    font-weight: bold;
+  }
+  .lang {
+    background: rgba(17, 24, 39, 0.85);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+  .lang[hidden] { display: none; }
+  h2 { color: var(--accent); margin-top: 28px; font-size: 1.25rem; }
+  h3 { color: #fff; margin-top: 22px; font-size: 1.05rem; }
+  p, li { color: #d1d5db; }
+  ul, ol { padding-inline-start: 24px; }
+  pre {
+    background: #020617;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    overflow-x: auto;
+    direction: ltr;
+    text-align: left;
+    color: #a7f3d0;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  code { font-family: Consolas, "Courier New", monospace; }
+  .note {
+    border-inline-start: 4px solid var(--accent2);
+    background: rgba(34, 197, 94, 0.08);
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin: 16px 0;
+    color: #bbf7d0;
+  }
+  .warn {
+    border-inline-start: 4px solid #f59e0b;
+    background: rgba(245, 158, 11, 0.08);
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin: 16px 0;
+    color: #fde68a;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .source-list li { margin-bottom: 6px; }
+  footer { color: var(--muted); text-align: center; margin-top: 24px; font-size: 0.85rem; }
+  [dir="ltr"] .lang { text-align: left; }
+  [dir="rtl"] .lang { text-align: right; }
+  @media (max-width: 600px) {
+    h1 { font-size: 1.25rem; }
+    .lang { padding: 16px; }
+    header { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>راهنمای ساخت فیلترشکن خصوصی | Private VPN Guide</h1>
+    <p class="sub">۵ زبان: فارسی، English، العربية، 中文، Русский — تک‌فایل HTML</p>
+    <nav aria-label="Language selector">
+      <button class="lang-btn active" data-lang="fa" onclick="showLang('fa')">فارسی</button>
+      <button class="lang-btn" data-lang="en" onclick="showLang('en')">English</button>
+      <button class="lang-btn" data-lang="ar" onclick="showLang('ar')">العربية</button>
+      <button class="lang-btn" data-lang="zh" onclick="showLang('zh')">中文</button>
+      <button class="lang-btn" data-lang="ru" onclick="showLang('ru')">Русский</button>
+    </nav>
+  </header>
+
+  <!-- ================= FA ================= -->
+  <section class="lang" id="fa" lang="fa" dir="rtl">
+    <h2>راهنمای جامع و گام‌به‌گام ساخت فیلترشکن خصوصی (رایگان + فروش)</h2>
+    <div class="warn">این راهنما صرفاً آموزشی است. مسئولیت استفاده قانونی و رعایت قوانین محل خود با شماست.</div>
+
+    <h3>۱) پیش‌نیازهای مشترک</h3>
+    <ul>
+      <li>یک دستگاه کلاینت: ویندوز، مک، اندروید یا iOS.</li>
+      <li>یک برنامه کلاینت: WireGuard، v2rayNG، Nekoray یا sing-box.</li>
+      <li>برای روش‌های سروری: یک VPS با دسترسی root یا sudo.</li>
+    </ul>
+
+    <h3>۲) روش‌های کاملاً رایگان</h3>
+    <p><strong>روش ۲.۱: Cloudflare Workers (VLESS over WebSocket)</strong></p>
+    <ol>
+      <li>حساب رایگان Cloudflare بسازید.</li>
+      <li>از بخش Workers &amp; Pages یک Worker جدید ایجاد کنید.</li>
+      <li>کد پروژه‌هایی مثل <code>Cloudflare-VLESS</code> یا <code>edgetunnel</code> را از گیت‌هاب در Worker قرار دهید.</li>
+      <li>متغیرهای محیطی مثل <code>UUID</code> و <code>HOST</code> را تنظیم کنید.</li>
+      <li>پس از Deploy، لینک VLESS یا QR Code را در v2rayNG یا sing-box وارد کنید.</li>
+    </ol>
+    <p><strong>روش ۲.۲: Oracle Cloud Always Free</strong></p>
+    <ol>
+      <li>در Oracle Cloud Free Tier ثبت‌نام کنید.</li>
+      <li>یک Instance با Ubuntu 22.04/24.04 بسازید.</li>
+      <li>پورت‌های لازم مثل UDP 51820 یا TCP 443 را در Security List باز کنید.</li>
+      <li>با SSH وصل شوید و یکی از روش‌های بخش ۳ را اجرا کنید.</li>
+    </ol>
+
+    <h3>۳) راه‌اندازی سرور شخصی با اسکریپت‌های خودکار</h3>
+    <p><strong>۳.۱ WireGuard تک‌فایلی:</strong></p>
+    <pre><code>curl -sSL https://raw.githubusercontent.com/pradeeparul2/simple-wireguard-setup/main/wireguard-install.sh | sudo bash</code></pre>
+    <p>دانلود کانفیگ کلاینت:</p>
+    <pre><code>curl -o client-config.zip http://&lt;SERVER_IP&gt;/client-config.zip</code></pre>
+
+    <p><strong>۳.۲ TunnelBypass (چندپروتکلی):</strong></p>
+    <pre><code>curl -fsSL https://raw.githubusercontent.com/abdelrahman30x/TunnelBypass/main/scripts/install.sh | bash</code></pre>
+    <p>سپس دستور <code>tunnelbypass</code> را اجرا کنید و پروتکل مورد نظر مثل <code>vless+reality</code> را انتخاب کنید.</p>
+
+    <p><strong>۳.۳ استک Docker (AmneziaWG + Xray):</strong></p>
+    <pre><code>git clone https://github.com/seb0ch/vpn.git &amp;&amp; cd vpn
+sudo ./docker-install.sh
+sudo ./deploy.sh</code></pre>
+
+    <h3>۴) نصب Xray VLESS + REALITY (مقاوم‌ترین روش)</h3>
+    <pre><code>apt install git
+git clone https://github.com/0xevn/xray-reality-setup.git
+cd xray-reality-setup
+chmod +x xray-setup.sh
+sh xray-setup.sh</code></pre>
+    <p>در پایان لینک <code>vless://</code> و QR Code دریافت می‌کنید. آن را در v2rayNG، Nekoray یا sing-box ایمپورت کنید.</p>
+
+    <h3>۵) راه‌اندازی سیستم فروش و مدیریت کاربران</h3>
+    <ul>
+      <li><strong>VPanel:</strong> پنل مدیریت و فروش با پشتیبانی از Marzban و X-UI — <a href="https://github.com/lkacom/vpanel" target="_blank" rel="noopener">github.com/lkacom/vpanel</a></li>
+      <li><strong>VPNMarket:</strong> پنل + ربات تلگرام + اپ اندروید — <a href="https://github.com/IranEclips/VPNMarket" target="_blank" rel="noopener">github.com/IranEclips/VPNMarket</a></li>
+      <li><strong>Hiddify Manager:</strong> پنل چندکاربره با ۲۰+ پروتکل — <a href="https://github.com/hiddify/Hiddify-Manager" target="_blank" rel="noopener">github.com/hiddify/Hiddify-Manager</a></li>
+      <li><strong>Marzban:</strong> پنل تخصصی Xray — <a href="https://github.com/Gozargah/Marzban" target="_blank" rel="noopener">github.com/Gozargah/Marzban</a></li>
+    </ul>
+    <p>نصب VPNMarket:</p>
+    <pre><code>bash &lt;(curl -sL https://raw.githubusercontent.com/IranEclips/VPNMarket/main/install.sh)</code></pre>
+    <p>نصب Hiddify Manager:</p>
+    <pre><code>bash &lt;(curl -sL https://github.com/hiddify/Hiddify-Manager/raw/main/install.sh)</code></pre>
+    <p>نصب Marzban:</p>
+    <pre><code>sudo bash -c "$(curl -sL https://github.com/Gozargah/Marzban-scripts/raw/master/marzban.sh)" @ install</code></pre>
+    <div class="note">برای فروش: پس از نصب پنل، ربات تلگرام را با توکن BotFather پیکربندی کنید و درگاه پرداخت را وصل کنید. دسترسی ادمین را محدود و از کلید SSH استفاده کنید.</div>
+
+    <h3>۶) منابع گیت‌هاب</h3>
+    <ul class="source-list">
+      <li><a href="https://github.com/abdelrahman30x/TunnelBypass" target="_blank" rel="noopener">TunnelBypass</a></li>
+      <li><a href="https://github.com/0xevn/xray-reality-setup" target="_blank" rel="noopener">Xray Reality Setup</a></li>
+      <li><a href="https://github.com/seb0ch/vpn" target="_blank" rel="noopener">seb0ch/vpn</a></li>
+      <li><a href="https://github.com/13556547/Cloudflare-VPN" target="_blank" rel="noopener">Cloudflare-VLESS</a></li>
+      <li><a href="https://github.com/lkacom/vpanel" target="_blank" rel="noopener">VPanel</a></li>
+      <li><a href="https://github.com/IranEclips/VPNMarket" target="_blank" rel="noopener">VPNMarket</a></li>
+      <li><a href="https://github.com/hiddify/Hiddify-Manager" target="_blank" rel="noopener">Hiddify Manager</a></li>
+      <li><a href="https://github.com/Gozargah/Marzban" target="_blank" rel="noopener">Marzban</a></li>
+    </ul>
+  </section>
+
+  <!-- ================= EN ================= -->
+  <section class="lang" id="en" lang="en" dir="ltr" hidden>
+    <h2>Complete Step-by-Step Guide to Building a Private VPN (Free + Commercial)</h2>
+    <div class="warn">This guide is for educational purposes. You are responsible for using it legally and complying with local laws.</div>
+
+    <h3>1) Common Prerequisites</h3>
+    <ul>
+      <li>A client device: Windows, Mac, Android, or iOS.</li>
+      <li>A client app: WireGuard, v2rayNG, Nekoray, or sing-box.</li>
+      <li>For server methods: a VPS with root or sudo access.</li>
+    </ul>
+
+    <h3>2) Completely Free Methods</h3>
+    <p><strong>2.1 Cloudflare Workers (VLESS over WebSocket)</strong></p>
+    <ol>
+      <li>Create a free Cloudflare account.</li>
+      <li>Create a new Worker under Workers &amp; Pages.</li>
+      <li>Paste code from projects such as <code>Cloudflare-VLESS</code> or <code>edgetunnel</code> from GitHub.</li>
+      <li>Set environment variables such as <code>UUID</code> and <code>HOST</code>.</li>
+      <li>After deployment, import the VLESS link or QR code into v2rayNG or sing-box.</li>
+    </ol>
+    <p><strong>2.2 Oracle Cloud Always Free</strong></p>
+    <ol>
+      <li>Sign up for Oracle Cloud Free Tier.</li>
+      <li>Create an Instance with Ubuntu 22.04/24.04.</li>
+      <li>Open required ports such as UDP 51820 or TCP 443 in the Security List.</li>
+      <li>Connect via SSH and run one of the methods in Section 3.</li>
+    </ol>
+
+    <h3>3) Personal Server with Automated Scripts</h3>
+    <p><strong>3.1 Single-file WireGuard:</strong></p>
+    <pre><code>curl -sSL https://raw.githubusercontent.com/pradeeparul2/simple-wireguard-setup/main/wireguard-install.sh | sudo bash</code></pre>
+    <p>Download the client config:</p>
+    <pre><code>curl -o client-config.zip http://&lt;SERVER_IP&gt;/client-config.zip</code></pre>
+
+    <p><strong>3.2 TunnelBypass (multi-protocol):</strong></p>
+    <pre><code>curl -fsSL https://raw.githubusercontent.com/abdelrahman30x/TunnelBypass/main/scripts/install.sh | bash</code></pre>
+    <p>Then run <code>tunnelbypass</code> and choose a protocol such as <code>vless+reality</code>.</p>
+
+    <p><strong>3.3 Docker stack (AmneziaWG + Xray):</strong></p>
+    <pre><code>git clone https://github.com/seb0ch/vpn.git &amp;&amp; cd vpn
+sudo ./docker-install.sh
+sudo ./deploy.sh</code></pre>
+
+    <h3>4) Xray VLESS + REALITY (Strongest Anti-Censorship)</h3>
+    <pre><code>apt install git
+git clone https://github.com/0xevn/xray-reality-setup.git
+cd xray-reality-setup
+chmod +x xray-setup.sh
+sh xray-setup.sh</code></pre>
+    <p>At the end you receive a <code>vless://</code> link and QR code. Import it into v2rayNG, Nekoray, or sing-box.</p>
+
+    <h3>5) Sales and User Management System</h3>
+    <ul>
+      <li><strong>VPanel:</strong> management and sales panel supporting Marzban and X-UI — <a href="https://github.com/lkacom/vpanel" target="_blank" rel="noopener">github.com/lkacom/vpanel</a></li>
+      <li><strong>VPNMarket:</strong> panel + Telegram bot + Android app — <a href="https://github.com/IranEclips/VPNMarket" target="_blank" rel="noopener">github.com/IranEclips/VPNMarket</a></li>
+      <li><strong>Hiddify Manager:</strong> multi-user panel with 20+ protocols — <a href="https://github.com/hiddify/Hiddify-Manager" target="_blank" rel="noopener">github.com/hiddify/Hiddify-Manager</a></li>
+      <li><strong>Marzban:</strong> dedicated Xray panel — <a href="https://github.com/Gozargah/Marzban" target="_blank" rel="noopener">github.com/Gozargah/Marzban</a></li>
+    </ul>
+    <p>Install VPNMarket:</p>
+    <pre><code>bash &lt;(curl -sL https://raw.githubusercontent.com/IranEclips/VPNMarket/main/install.sh)</code></pre>
+    <p>Install Hiddify Manager:</p>
+    <pre><code>bash &lt;(curl -sL https://github.com/hiddify/Hiddify-Manager/raw/main/install.sh)</code></pre>
+    <p>Install Marzban:</p>
+    <pre><code>sudo bash -c "$(curl -sL https://github.com/Gozargah/Marzban-scripts/raw/master/marzban.sh)" @ install</code></pre>
+    <div class="note">For sales: after installing the panel, configure the Telegram bot with a BotFather token and connect a payment gateway. Restrict admin access and use SSH keys.</div>
+
+    <h3>6) GitHub Sources</h3>
+    <ul class="source-list">
+      <li><a href="https://github.com/abdelrahman30x/TunnelBypass" target="_blank" rel="noopener">TunnelBypass</a></li>
+      <li><a href="https://github.com/0xevn/xray-reality-setup" target="_blank" rel="noopener">Xray Reality Setup</a></li>
+      <li><a href="https://github.com/seb0ch/vpn" target="_blank" rel="noopener">seb0ch/vpn</a></li>
+      <li><a href="https://github.com/13556547/Cloudflare-VPN" target="_blank" rel="noopener">Cloudflare-VLESS</a></li>
+      <li><a href="https://github.com/lkacom/vpanel" target="_blank" rel="noopener">VPanel</a></li>
+      <li><a href="https://github.com/IranEclips/VPNMarket" target="_blank" rel="noopener">VPNMarket</a></li>
+      <li><a href="https://github.com/hiddify/Hiddify-Manager" target="_blank" rel="noopener">Hiddify Manager</a></li>
+      <li><a href="https://github.com/Gozargah/Marzban" target="_blank" rel="noopener">Marzban</a></li>
+    </ul>
+  </section>
+
+  <!-- ================= AR ================= -->
+  <section class="lang" id="ar" lang="ar" dir="rtl" hidden>
+    <h2>دليل شامل خطوة بخطوة لبناء VPN خاص (مجاني + تجاري)</h2>
+    <div class="warn">هذا الدليل لأغراض تعليمية. أنت مسؤول عن الاستخدام القانوني والالتزام بقوانين بلدك.</div>
+
+    <h3>١) المتطلبات المشتركة</h3>
+    <ul>
+      <li>جهاز عميل: Windows أو Mac أو Android أو iOS.</li>
+      <li>تطبيق عميل: WireGuard أو v2rayNG أو Nekoray أو sing-box.</li>
+      <li>لطرق الخادم: VPS مع صلاحية root أو sudo.</li>
+    </ul>
+
+    <h3>٢) طرق مجانية بالكامل</h3>
+    <p><strong>٢.١ Cloudflare Workers (VLESS over WebSocket)</strong></p>
+    <ol>
+      <li>أنشئ حساب Cloudflare مجاني.</li>
+      <li>أنشئ Worker جديدًا من Workers &amp; Pages.</li>
+      <li>ضع كود مشاريع مثل <code>Cloudflare-VLESS</code> أو <code>edgetunnel</code> من GitHub.</li>
+      <li>اضبط متغيرات البيئة مثل <code>UUID</code> و <code>HOST</code>.</li>
+      <li>بعد النشر، استورد رابط VLESS أو رمز QR في v2rayNG أو sing-box.</li>
+    </ol>
+    <p><strong>٢.٢ Oracle Cloud Always Free</strong></p>
+    <ol>
+      <li>سجّل في Oracle Cloud Free Tier.</li>
+      <li>أنشئ Instance بنظام Ubuntu 22.04/24.04.</li>
+      <li>افتح المنافذ المطلوبة مثل UDP 51820 أو TCP 443 في Security List.</li>
+      <li>اتصل عبر SSH ونفّذ إحدى طرق القسم ٣.</li>
+    </ol>
+
+    <h3>٣) خادم شخصي باستخدام سكريبتات تلقائية</h3>
+    <p><strong>٣.١ WireGuard أحادي الملف:</strong></p>
+    <pre><code>curl -sSL https://raw.githubusercontent.com/pradeeparul2/simple-wireguard-setup/main/wireguard-install.sh | sudo bash</code></pre>
+    <p>تنزيل إعداد العميل:</p>
+    <pre><code>curl -o client-config.zip http://&lt;SERVER_IP&gt;/client-config.zip</code></pre>
+
+    <p><strong>٣.٢ TunnelBypass (متعدد البروتوكولات):</strong></p>
+    <pre><code>curl -fsSL https://raw.githubusercontent.com/abdelrahman30x/TunnelBypass/main/scripts/install.sh | bash</code></pre>
+    <p>ثم نفّذ <code>tunnelbypass</code> واختر بروتوكولًا مثل <code>vless+reality</code>.</p>
+
+    <p><strong>٣.٣ حزمة Docker (AmneziaWG + Xray):</strong></p>
+    <pre><code>git clone https://github.com/seb0ch/vpn.git &amp;&amp; cd vpn
+sudo ./docker-install.sh
+sudo ./deploy.sh</code></pre>
+
+    <h3>٤) تثبيت Xray VLESS + REALITY (الأقوى ضد الحجب)</h3>
+    <pre><code>apt install git
+git clone https://github.com/0xevn/xray-reality-setup.git
+cd xray-reality-setup
+chmod +x xray-setup.sh
+sh xray-setup.sh</code></pre>
+    <p>في النهاية تحصل على رابط <code>vless://</code> ورمز QR. استوردهما في v2rayNG أو Nekoray أو sing-box.</p>
+
+    <h3>٥) نظام البيع وإدارة المستخدمين</h3>
+    <ul>
+      <li><strong>VPanel:</strong> لوحة إدارة وبيع تدعم Marzban و X-UI — <a href="https://github.com/lkacom/vpanel" target="_blank" rel="noopener">github.com/lkacom/vpanel</a></li>
+      <li><strong>VPNMarket:</strong> لوحة + بوت تلغرام + تطبيق أندرويد — <a href="https://github.com/IranEclips/VPNMarket" target="_blank" rel="noopener">github.com/IranEclips/VPNMarket</a></li>
+      <li><strong>Hiddify Manager:</strong> لوحة متعددة المستخدمين مع 20+ بروتوكول — <a href="https://github.com/hiddify/Hiddify-Manager" target="_blank" rel="noopener">github.com/hiddify/Hiddify-Manager</a></li>
+      <li><strong>Marzban:</strong> لوحة Xray متخصصة — <a href="https://github.com/Gozargah/Marzban" target="_blank" rel="noopener">github.com/Gozargah/Marzban</a></li>
+    </ul>
+    <p>تثبيت VPNMarket:</p>
+    <pre><code>bash &lt;(curl -sL https://raw.githubusercontent.com/IranEclips/VPNMarket/main/install.sh)</code></pre>
+    <p>تثبيت Hiddify Manager:</p>
+    <pre><code>bash &lt;(curl -sL https://github.com/hiddify/Hiddify-Manager/raw/main/install.sh)</code></pre>
+    <p>تثبيت Marzban:</p>
+    <pre><code>sudo bash -c "$(curl -sL https://github.com/Gozargah/Marzban-scripts/raw/master/marzban.sh)" @ install</code></pre>
+    <div class="note">للبيع: بعد تثبيت اللوحة، اضبط بوت تلغرام باستخدام توكن BotFather واربط بوابة الدفع. قيّد صلاحيات المسؤول واستخدم مفاتيح SSH.</div>
+
+    <h3>٦) مصادر GitHub</h3>
+    <ul class="source-list">
+      <li><a href="https://github.com/abdelrahman30x/TunnelBypass" target="_blank" rel="noopener">TunnelBypass</a></li>
+      <li><a href="https://github.com/0xevn/xray-reality-setup" target="_blank" rel="noopener">Xray Reality Setup</a></li>
+      <li><a href="https://github.com/seb0ch/vpn" target="_blank" rel="noopener">seb0ch/vpn</a></li>
+      <li><a href="https://github.com/13556547/Cloudflare-VPN" target="_blank" rel="noopener">Cloudflare-VLESS</a></li>
+      <li><a href="https://github.com/lkacom/vpanel" target="_blank" rel="noopener">VPanel</a></li>
+      <li><a href="https://github.com/IranEclips/VPNMarket" target="_blank" rel="noopener">VPNMarket</a></li>
+      <li><a href="https://github.com/hiddify/Hiddify-Manager" target="_blank" rel="noopener">Hiddify Manager</a></li>
+      <li><a href="https://github.com/Gozargah/Marzban" target="_blank" rel="noopener">Marzban</a></li>
+    </ul>
+  </section>
+
+  <!-- ================= ZH ================= -->
+  <section class="lang" id="zh" lang="zh" dir="ltr" hidden>
+    <h2>搭建私人 VPN 的完整分步指南（免费 + 商业）</h2>
+    <div class="warn">本指南仅供教育用途。请自行确保合法使用并遵守当地法律。</div>
+
+    <h3>1) 通用前提条件</h3>
+    <ul>
+      <li>客户端设备：Windows、Mac、Android 或 iOS。</li>
+      <li>客户端应用：WireGuard、v2rayNG、Nekoray 或 sing-box。</li>
+      <li>服务器方法需要：具有 root 或 sudo 权限的 VPS。</li>
+    </ul>
+
+    <h3>2) 完全免费的方法</h3>
+    <p><strong>2.1 Cloudflare Workers（VLESS over WebSocket）</strong></p>
+    <ol>
+      <li>创建免费 Cloudflare 账户。</li>
+      <li>在 Workers &amp; Pages 中创建新的 Worker。</li>
+      <li>从 GitHub 复制 <code>Cloudflare-VLESS</code> 或 <code>edgetunnel</code> 等项目的代码。</li>
+      <li>设置环境变量，如 <code>UUID</code> 和 <code>HOST</code>。</li>
+      <li>部署后，将 VLESS 链接或二维码导入 v2rayNG 或 sing-box。</li>
+    </ol>
+    <p><strong>2.2 Oracle Cloud Always Free</strong></p>
+    <ol>
+      <li>注册 Oracle Cloud Free Tier。</li>
+      <li>创建 Ubuntu 22.04/24.04 实例。</li>
+      <li>在 Security List 中开放 UDP 51820 或 TCP 443 等端口。</li>
+      <li>通过 SSH 连接并运行第 3 部分的方法。</li>
+    </ol>
+
+    <h3>3) 使用自动脚本搭建个人服务器</h3>
+    <p><strong>3.1 单文件 WireGuard：</strong></p>
+    <pre><code>curl -sSL https://raw.githubusercontent.com/pradeeparul2/simple-wireguard-setup/main/wireguard-install.sh | sudo bash</code></pre>
+    <p>下载客户端配置：</p>
+    <pre><code>curl -o client-config.zip http://&lt;SERVER_IP&gt;/client-config.zip</code></pre>
+
+    <p><strong>3.2 TunnelBypass（多协议）：</strong></p>
+    <pre><code>curl -fsSL https://raw.githubusercontent.com/abdelrahman30x/TunnelBypass/main/scripts/install.sh | bash</code></pre>
+    <p>然后运行 <code>tunnelbypass</code> 并选择 <code>vless+reality</code> 等协议。</p>
+
+    <p><strong>3.3 Docker 栈（AmneziaWG + Xray）：</strong></p>
+    <pre><code>git clone https://github.com/seb0ch/vpn.git &amp;&amp; cd vpn
+sudo ./docker-install.sh
+sudo ./deploy.sh</code></pre>
+
+    <h3>4) 安装 Xray VLESS + REALITY（最强抗封锁）</h3>
+    <pre><code>apt install git
+git clone https://github.com/0xevn/xray-reality-setup.git
+cd xray-reality-setup
+chmod +x xray-setup.sh
+sh xray-setup.sh</code></pre>
+    <p>完成后会得到 <code>vless://</code> 链接和二维码，导入 v2rayNG、Nekoray 或 sing-box。</p>
+
+    <h3>5) 销售与用户管理系统</h3>
+    <ul>
+      <li><strong>VPanel：</strong>支持 Marzban 和 X-UI 的管理与销售面板 — <a href="https://github.com/lkacom/vpanel" target="_blank" rel="noopener">github.com/lkacom/vpanel</a></li>
+      <li><strong>VPNMarket：</strong>面板 + Telegram 机器人 + Android 应用 — <a href="https://github.com/IranEclips/VPNMarket" target="_blank" rel="noopener">github.com/IranEclips/VPNMarket</a></li>
+      <li><strong>Hiddify Manager：</strong>支持 20+ 协议的多用户面板 — <a href="https://github.com/hiddify/Hiddify-Manager" target="_blank" rel="noopener">github.com/hiddify/Hiddify-Manager</a></li>
+      <li><strong>Marzban：</strong>专用 Xray 面板 — <a href="https://github.com/Gozargah/Marzban" target="_blank" rel="noopener">github.com/Gozargah/Marzban</a></li>
+    </ul>
+    <p>安装 VPNMarket：</p>
+    <pre><code>bash &lt;(curl -sL https://raw.githubusercontent.com/IranEclips/VPNMarket/main/install.sh)</code></pre>
+    <p>安装 Hiddify Manager：</p>
+    <pre><code>bash &lt;(curl -sL https://github.com/hiddify/Hiddify-Manager/raw/main/install.sh)</code></pre>
+    <p>安装 Marzban：</p>
+    <pre><code>sudo bash -c "$(curl -sL https://github.com/Gozargah/Marzban-scripts/raw/master/marzban.sh)" @ install</code></pre>
+    <div class="note">销售提示：安装面板后，用 BotFather 令牌配置 Telegram 机器人并接入支付网关。限制管理员权限并使用 SSH 密钥。</div>
+
+    <h3>6) GitHub 资源</h3>
+    <ul class="source-list">
+      <li><a href="https://github.com/abdelrahman30x/TunnelBypass" target="_blank" rel="noopener">TunnelBypass</a></li>
+      <li><a href="https://github.com/0xevn/xray-reality-setup" target="_blank" rel="noopener">Xray Reality Setup</a></li>
+      <li><a href="https://github.com/seb0ch/vpn" target="_blank" rel="noopener">seb0ch/vpn</a></li>
+      <li><a href="https://github.com/13556547/Cloudflare-VPN" target="_blank" rel="noopener">Cloudflare-VLESS</a></li>
+      <li><a href="https://github.com/lkacom/vpanel" target="_blank" rel="noopener">VPanel</a></li>
+      <li><a href="https://github.com/IranEclips/VPNMarket" target="_blank" rel="noopener">VPNMarket</a></li>
+      <li><a href="https://github.com/hiddify/Hiddify-Manager" target="_blank" rel="noopener">Hiddify Manager</a></li>
+      <li><a href="https://github.com/Gozargah/Marzban" target="_blank" rel="noopener">Marzban</a></li>
+    </ul>
+  </section>
+
+  <!-- ================= RU ================= -->
+  <section class="lang" id="ru" lang="ru" dir="ltr" hidden>
+    <h2>Полное пошаговое руководство по созданию частного VPN (бесплатно + для продажи)</h2>
+    <div class="warn">Руководство предназначено для образовательных целей. Вы несете ответственность за законное использование и соблюдение местных законов.</div>
+
+    <h3>1) Общие предварительные требования</h3>
+    <ul>
+      <li>Клиентское устройство: Windows, Mac, Android или iOS.</li>
+      <li>Клиентское приложение: WireGuard, v2rayNG, Nekoray или sing-box.</li>
+      <li>Для серверных методов: VPS с доступом root или sudo.</li>
+    </ul>
+
+    <h3>2) Полностью бесплатные методы</h3>
+    <p><strong>2.1 Cloudflare Workers (VLESS over WebSocket)</strong></p>
+    <ol>
+      <li>Создайте бесплатный аккаунт Cloudflare.</li>
+      <li>Создайте новый Worker в разделе Workers &amp; Pages.</li>
+      <li>Вставьте код проектов <code>Cloudflare-VLESS</code> или <code>edgetunnel</code> с GitHub.</li>
+      <li>Задайте переменные окружения, например <code>UUID</code> и <code>HOST</code>.</li>
+      <li>После развертывания импортируйте ссылку VLESS или QR-код в v2rayNG или sing-box.</li>
+    </ol>
+    <p><strong>2.2 Oracle Cloud Always Free</strong></p>
+    <ol>
+      <li>Зарегистрируйтесь в Oracle Cloud Free Tier.</li>
+      <li>Создайте Instance с Ubuntu 22.04/24.04.</li>
+      <li>Откройте нужные порты, например UDP 51820 или TCP 443, в Security List.</li>
+      <li>Подключитесь по SSH и выполните один из методов раздела 3.</li>
+    </ol>
+
+    <h3>3) Личный сервер с автоматическими скриптами</h3>
+    <p><strong>3.1 Однострочный WireGuard:</strong></p>
+    <pre><code>curl -sSL https://raw.githubusercontent.com/pradeeparul2/simple-wireguard-setup/main/wireguard-install.sh | sudo bash</code></pre>
+    <p>Скачать конфигурацию клиента:</p>
+    <pre><code>curl -o client-config.zip http://&lt;SERVER_IP&gt;/client-config.zip</code></pre>
+
+    <p><strong>3.2 TunnelBypass (мультипротокол):</strong></p>
+    <pre><code>curl -fsSL https://raw.githubusercontent.com/abdelrahman30x/TunnelBypass/main/scripts/install.sh | bash</code></pre>
+    <p>Затем выполните <code>tunnelbypass</code> и выберите протокол, например <code>vless+reality</code>.</p>
+
+    <p><strong>3.3 Docker-стек (AmneziaWG + Xray):</strong></p>
+    <pre><code>git clone https://github.com/seb0ch/vpn.git &amp;&amp; cd vpn
+sudo ./docker-install.sh
+sudo ./deploy.sh</code></pre>
+
+    <h3>4) Установка Xray VLESS + REALITY (самый устойчивый к блокировкам)</h3>
+    <pre><code>apt install git
+git clone https://github.com/0xevn/xray-reality-setup.git
+cd xray-reality-setup
+chmod +x xray-setup.sh
+sh xray-setup.sh</code></pre>
+    <p>В конце вы получите ссылку <code>vless://</code> и QR-код. Импортируйте их в v2rayNG, Nekoray или sing-box.</p>
+
+    <h3>5) Система продаж и управления пользователями</h3>
+    <ul>
+      <li><strong>VPanel:</strong> панель управления и продаж с поддержкой Marzban и X-UI — <a href="https://github.com/lkacom/vpanel" target="_blank" rel="noopener">github.com/lkacom/vpanel</a></li>
+      <li><strong>VPNMarket:</strong> панель + Telegram-бот + Android-приложение — <a href="https://github.com/IranEclips/VPNMarket" target="_blank" rel="noopener">github.com/IranEclips/VPNMarket</a></li>
+      <li><strong>Hiddify Manager:</strong> многопользовательская панель с 20+ протоколами — <a href="https://github.com/hiddify/Hiddify-Manager" target="_blank" rel="noopener">github.com/hiddify/Hiddify-Manager</a></li>
+      <li><strong>Marzban:</strong> специализированная панель Xray — <a href="https://github.com/Gozargah/Marzban" target="_blank" rel="noopener">github.com/Gozargah/Marzban</a></li>
+    </ul>
+    <p>Установка VPNMarket:</p>
+    <pre><code>bash &lt;(curl -sL https://raw.githubusercontent.com/IranEclips/VPNMarket/main/install.sh)</code></pre>
+    <p>Установка Hiddify Manager:</p>
+    <pre><code>bash &lt;(curl -sL https://github.com/hiddify/Hiddify-Manager/raw/main/install.sh)</code></pre>
+    <p>Установка Marzban:</p>
+    <pre><code>sudo bash -c "$(curl -sL https://github.com/Gozargah/Marzban-scripts/raw/master/marzban.sh)" @ install</code></pre>
+    <div class="note">Для продажи: после установки панели настройте Telegram-бота с токеном BotFather и подключите платежный шлюз. Ограничьте доступ администратора и используйте SSH-ключи.</div>
+
+    <h3>6) Источники GitHub</h3>
+    <ul class="source-list">
+      <li><a href="https://github.com/abdelrahman30x/TunnelBypass" target="_blank" rel="noopener">TunnelBypass</a></li>
+      <li><a href="https://github.com/0xevn/xray-reality-setup" target="_blank" rel="noopener">Xray Reality Setup</a></li>
+      <li><a href="https://github.com/seb0ch/vpn" target="_blank" rel="noopener">seb0ch/vpn</a></li>
+      <li><a href="https://github.com/13556547/Cloudflare-VPN" target="_blank" rel="noopener">Cloudflare-VLESS</a></li>
+      <li><a href="https://github.com/lkacom/vpanel" target="_blank" rel="noopener">VPanel</a></li>
+      <li><a href="https://github.com/IranEclips/VPNMarket" target="_blank" rel="noopener">VPNMarket</a></li>
+      <li><a href="https://github.com/hiddify/Hiddify-Manager" target="_blank" rel="noopener">Hiddify Manager</a></li>
+      <li><a href="https://github.com/Gozargah/Marzban" target="_blank" rel="noopener">Marzban</a></li>
+    </ul>
+  </section>
+
+  <footer>
+    ساخته‌شده برای راهنمای آموزشی — Educational Guide — 2026
+  </footer>
+</div>
+
+<script>
+  const sections = document.querySelectorAll('.lang');
+  const buttons = document.querySelectorAll('.lang-btn');
+
+  function showLang(lang) {
+    sections.forEach(section => {
+      section.hidden = section.id !== lang;
+    });
+    buttons.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+    const rtlLangs = ['fa', 'ar'];
+    document.documentElement.lang = lang;
+    document.documentElement.dir = rtlLangs.includes(lang) ? 'rtl' : 'ltr';
+  }
+
+  // نمایش پیش‌فرض فارسی
+  showLang('fa');
+</script>
+</body>
+</html>
