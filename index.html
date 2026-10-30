@@ -3,7 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>راهنمای ساخت فیلترشکن خصوصی | Private VPN Guide</title>
+
+<!-- ================= SEO Meta Tags ================= -->
+<title>راهنمای جامع پنل‌های VPN با PHP و Python | VPN Panel Guide (PHP & Python)</title>
+<meta name="description" content="راهنمای کامل و گام‌به‌گام نصب و مدیریت پنل‌های VPN متن‌باز با PHP و Python. شامل Marzban، Hiddify، RVG، AmneziaVPN و روش‌های خرید و فروش. Complete guide to open-source VPN panels with PHP & Python.">
+<meta name="keywords" content="VPN panel, PHP VPN, Python VPN, Marzban, Hiddify, Xray, WireGuard, پنل VPN, فیلترشکن, open source VPN, VPN management">
+<meta name="author" content="Educational Guide">
+<meta name="robots" content="index, follow">
+
+<!-- Google Site Verification (خودتان قرار داده‌اید) -->
+<meta name="google-site-verification" content="GM6cW7NOeJv5e_XrhieqxfnHqnN25ozSpOmGew2QOKw" />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="راهنمای جامع پنل‌های VPN با PHP و Python">
+<meta property="og:description" content="نصب و مدیریت پنل‌های متن‌باز VPN با PHP و Python. Marzban, Hiddify, RVG, AmneziaVPN و بیشتر.">
+<meta property="og:locale" content="fa_IR">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="VPN Panel Guide (PHP & Python)">
+<meta name="twitter:description" content="Complete guide to open-source VPN management panels built with PHP and Python.">
+
+<!-- Canonical -->
+<link rel="canonical" href="https://your-domain.com/vpn-panel-guide.html">
+
 <style>
   :root {
     --bg: #0f172a;
@@ -13,25 +37,30 @@
     --accent: #38bdf8;
     --accent2: #22c55e;
     --border: #334155;
+    --php: #8892bf;
+    --python: #3776ab;
+    --donate: #f59e0b;
+    --buy: #22c55e;
   }
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
     margin: 0;
     font-family: Tahoma, Arial, "Segoe UI", sans-serif;
     background: linear-gradient(180deg, #020617, var(--bg));
     color: var(--text);
-    line-height: 1.8;
+    line-height: 1.9;
   }
-  .wrap { max-width: 1050px; margin: 0 auto; padding: 24px 16px 60px; }
+  .wrap { max-width: 1150px; margin: 0 auto; padding: 24px 16px 60px; }
   header {
     background: rgba(17, 24, 39, 0.9);
     border: 1px solid var(--border);
     border-radius: 18px;
-    padding: 20px;
+    padding: 22px;
     margin-bottom: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   }
-  h1 { margin: 0 0 8px; font-size: 1.6rem; color: #fff; }
+  h1 { margin: 0 0 8px; font-size: 1.7rem; color: #fff; }
   .sub { color: var(--muted); margin: 0; font-size: 0.95rem; }
   nav {
     display: flex;
@@ -44,12 +73,12 @@
     border: 1px solid var(--border);
     background: #0b1220;
     color: var(--text);
-    padding: 8px 14px;
+    padding: 8px 16px;
     border-radius: 999px;
     font-size: 0.9rem;
-    transition: 0.2s;
+    transition: all 0.2s;
   }
-  .lang-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .lang-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
   .lang-btn.active {
     background: var(--accent);
     color: #001018;
@@ -57,65 +86,143 @@
     font-weight: bold;
   }
   .lang {
-    background: rgba(17, 24, 39, 0.85);
+    background: rgba(17, 24, 39, 0.88);
     border: 1px solid var(--border);
     border-radius: 18px;
-    padding: 22px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    animation: fadeIn 0.25s ease;
   }
+  @keyframes fadeIn { from { opacity: 0.6; } to { opacity: 1; } }
   .lang[hidden] { display: none; }
-  h2 { color: var(--accent); margin-top: 28px; font-size: 1.25rem; }
-  h3 { color: #fff; margin-top: 22px; font-size: 1.05rem; }
-  p, li { color: #d1d5db; }
-  ul, ol { padding-inline-start: 24px; }
+
+  h2 { color: var(--accent); margin-top: 32px; font-size: 1.3rem; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+  h3 { color: #fff; margin-top: 26px; font-size: 1.1rem; }
+  h4 { color: var(--accent2); margin-top: 20px; font-size: 1rem; }
+  p, li { color: #d1d5db; font-size: 0.95rem; }
+  ul, ol { padding-inline-start: 26px; }
+
   pre {
     background: #020617;
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 14px;
+    padding: 16px;
     overflow-x: auto;
     direction: ltr;
     text-align: left;
     color: #a7f3d0;
     font-family: Consolas, "Courier New", monospace;
-    font-size: 0.9rem;
-    line-height: 1.6;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    tab-size: 2;
   }
   code { font-family: Consolas, "Courier New", monospace; }
+
   .note {
     border-inline-start: 4px solid var(--accent2);
     background: rgba(34, 197, 94, 0.08);
-    padding: 12px 14px;
+    padding: 14px 16px;
     border-radius: 10px;
-    margin: 16px 0;
+    margin: 18px 0;
     color: #bbf7d0;
+    font-size: 0.93rem;
   }
   .warn {
     border-inline-start: 4px solid #f59e0b;
     background: rgba(245, 158, 11, 0.08);
-    padding: 12px 14px;
+    padding: 14px 16px;
     border-radius: 10px;
-    margin: 16px 0;
+    margin: 18px 0;
     color: #fde68a;
+    font-size: 0.93rem;
   }
+
+  .badge-php { background: var(--php); color: #fff; padding: 3px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: bold; }
+  .badge-py { background: var(--python); color: #fff; padding: 3px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: bold; }
+
+  .img-placeholder {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    border: 1px dashed var(--border);
+    border-radius: 14px;
+    padding: 28px 20px;
+    text-align: center;
+    color: var(--muted);
+    margin: 18px 0;
+    font-size: 0.9rem;
+    position: relative;
+  }
+  .img-placeholder::before { content: "🖼️ "; font-size: 1.1rem; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 750px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    h1 { font-size: 1.3rem; }
+    .lang { padding: 18px; }
+  }
+
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
-  .source-list li { margin-bottom: 6px; }
-  footer { color: var(--muted); text-align: center; margin-top: 24px; font-size: 0.85rem; }
+
+  /* ---- Donate & Buy Section ---- */
+  .support-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 28px 0 10px;
+  }
+  @media (max-width: 650px) { .support-section { grid-template-columns: 1fr; } }
+  .support-card {
+    border-radius: 18px;
+    padding: 24px 20px;
+    text-align: center;
+    border: 1px solid var(--border);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .support-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,0.35); }
+  .support-card.donate { background: linear-gradient(160deg, rgba(245,158,11,0.12), rgba(17,24,39,0.9)); border-color: var(--donate); }
+  .support-card.buy { background: linear-gradient(160deg, rgba(34,197,94,0.12), rgba(17,24,39,0.9)); border-color: var(--buy); }
+  .support-card .icon { font-size: 2.2rem; margin-bottom: 8px; }
+  .support-card h3 { margin: 6px 0 10px; }
+  .support-card p { font-size: 0.9rem; color: #cbd5e1; margin-bottom: 16px; }
+  .btn {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 999px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+  }
+  .btn-donate { background: var(--donate); color: #1a1a1a; }
+  .btn-donate:hover { background: #fbbf24; transform: scale(1.04); text-decoration: none; }
+  .btn-buy { background: var(--buy); color: #052e16; }
+  .btn-buy:hover { background: #4ade80; transform: scale(1.04); text-decoration: none; }
+
+  footer { color: var(--muted); text-align: center; margin-top: 36px; font-size: 0.85rem; padding-top: 20px; border-top: 1px solid var(--border); }
+
   [dir="ltr"] .lang { text-align: left; }
   [dir="rtl"] .lang { text-align: right; }
-  @media (max-width: 600px) {
-    h1 { font-size: 1.25rem; }
-    .lang { padding: 16px; }
-    header { padding: 16px; }
+
+  /* Table of contents style */
+  .toc {
+    background: rgba(2, 6, 23, 0.6);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin: 18px 0;
   }
+  .toc p { margin: 0 0 8px; color: var(--accent); font-weight: bold; }
+  .toc ul { margin: 0; padding-inline-start: 20px; }
+  .toc li { margin-bottom: 4px; font-size: 0.9rem; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>راهنمای ساخت فیلترشکن خصوصی | Private VPN Guide</h1>
-    <p class="sub">۵ زبان: فارسی، English، العربية، 中文، Русский — تک‌فایل HTML</p>
+    <h1>راهنمای جامع پنل‌های VPN با PHP و Python</h1>
+    <p class="sub">۵ زبان: فارسی، English، العربية، 中文， Русский — همراه با تصاویر شماتیک، حمایت و خرید</p>
     <nav aria-label="Language selector">
       <button class="lang-btn active" data-lang="fa" onclick="showLang('fa')">فارسی</button>
       <button class="lang-btn" data-lang="en" onclick="showLang('en')">English</button>
@@ -127,402 +234,465 @@
 
   <!-- ================= FA ================= -->
   <section class="lang" id="fa" lang="fa" dir="rtl">
-    <h2>راهنمای جامع و گام‌به‌گام ساخت فیلترشکن خصوصی (رایگان + فروش)</h2>
-    <div class="warn">این راهنما صرفاً آموزشی است. مسئولیت استفاده قانونی و رعایت قوانین محل خود با شماست.</div>
+    <h2>راهنمای جامع پنل‌های مدیریت VPN با PHP و Python</h2>
+    <div class="warn">⚠️ این راهنما صرفاً آموزشی است. مسئولیت استفاده قانونی و رعایت قوانین محل خود با شماست.</div>
 
-    <h3>۱) پیش‌نیازهای مشترک</h3>
-    <ul>
-      <li>یک دستگاه کلاینت: ویندوز، مک، اندروید یا iOS.</li>
-      <li>یک برنامه کلاینت: WireGuard، v2rayNG، Nekoray یا sing-box.</li>
-      <li>برای روش‌های سروری: یک VPS با دسترسی root یا sudo.</li>
-    </ul>
+    <div class="toc">
+      <p>📑 فهرست مطالب</p>
+      <ul>
+        <li>پنل‌های PHP (VPNMarket، AmneziaVPN، OpenVPN Manager)</li>
+        <li>پنل‌های Python (Marzban، Hiddify، RVG، v2pi)</li>
+        <li>مقایسه سریع و توصیه امنیتی</li>
+        <li>حمایت مالی و خرید</li>
+      </ul>
+    </div>
 
-    <h3>۲) روش‌های کاملاً رایگان</h3>
-    <p><strong>روش ۲.۱: Cloudflare Workers (VLESS over WebSocket)</strong></p>
-    <ol>
-      <li>حساب رایگان Cloudflare بسازید.</li>
-      <li>از بخش Workers &amp; Pages یک Worker جدید ایجاد کنید.</li>
-      <li>کد پروژه‌هایی مثل <code>Cloudflare-VLESS</code> یا <code>edgetunnel</code> را از گیت‌هاب در Worker قرار دهید.</li>
-      <li>متغیرهای محیطی مثل <code>UUID</code> و <code>HOST</code> را تنظیم کنید.</li>
-      <li>پس از Deploy، لینک VLESS یا QR Code را در v2rayNG یا sing-box وارد کنید.</li>
-    </ol>
-    <p><strong>روش ۲.۲: Oracle Cloud Always Free</strong></p>
-    <ol>
-      <li>در Oracle Cloud Free Tier ثبت‌نام کنید.</li>
-      <li>یک Instance با Ubuntu 22.04/24.04 بسازید.</li>
-      <li>پورت‌های لازم مثل UDP 51820 یا TCP 443 را در Security List باز کنید.</li>
-      <li>با SSH وصل شوید و یکی از روش‌های بخش ۳ را اجرا کنید.</li>
-    </ol>
+    <p>در این راهنما، بهترین پنل‌های متن‌باز مدیریت VPN که با زبان‌های <span class="badge-php">PHP</span> و <span class="badge-py">Python</span> توسعه یافته‌اند معرفی و مراحل نصب آن‌ها به صورت گام‌به‌گام توضیح داده می‌شود. این پنل‌ها به شما امکان مدیریت کاربران، فروش اشتراک و کنترل سرورها را می‌دهند.</p>
 
-    <h3>۳) راه‌اندازی سرور شخصی با اسکریپت‌های خودکار</h3>
-    <p><strong>۳.۱ WireGuard تک‌فایلی:</strong></p>
-    <pre><code>curl -sSL https://raw.githubusercontent.com/pradeeparul2/simple-wireguard-setup/main/wireguard-install.sh | sudo bash</code></pre>
-    <p>دانلود کانفیگ کلاینت:</p>
-    <pre><code>curl -o client-config.zip http://&lt;SERVER_IP&gt;/client-config.zip</code></pre>
+    <div class="img-placeholder">نمای کلی یک پنل مدیریت VPN (داشبورد، لیست کاربران، نمودار ترافیک، وضعیت نودها)</div>
 
-    <p><strong>۳.۲ TunnelBypass (چندپروتکلی):</strong></p>
-    <pre><code>curl -fsSL https://raw.githubusercontent.com/abdelrahman30x/TunnelBypass/main/scripts/install.sh | bash</code></pre>
-    <p>سپس دستور <code>tunnelbypass</code> را اجرا کنید و پروتکل مورد نظر مثل <code>vless+reality</code> را انتخاب کنید.</p>
+    <!-- ===== PHP Panels ===== -->
+    <h3>۱) پنل‌های مبتنی بر PHP</h3>
 
-    <p><strong>۳.۳ استک Docker (AmneziaWG + Xray):</strong></p>
-    <pre><code>git clone https://github.com/seb0ch/vpn.git &amp;&amp; cd vpn
-sudo ./docker-install.sh
-sudo ./deploy.sh</code></pre>
+    <h4>۱.۱ VPNMarket (لاراول + فیلامنت) — مناسب فروش و کسب‌وکار</h4>
+    <p><strong>توضیح:</strong> یک اکوسیستم کامل برای مدیریت و فروش VPN که از پنل‌های Marzban و X-UI پشتیبانی می‌کند. دارای ربات تلگرام فروش خودکار و اپلیکیشن اندروید است.</p>
+    <p><strong>پیش‌نیازها:</strong> Ubuntu 22.04، دامنه، دسترسی root، PHP 8.1+، MySQL.</p>
+    <p><strong>نصب با یک دستور:</strong></p>
+    <pre><code>wget -O install.sh https://raw.githubusercontent.com/arvinvahed/VPNMarket/main/install.sh && sudo bash install.sh</code></pre>
+    <p>پس از نصب، از طریق مرورگر به دامنه خود مراجعه کنید و پنل ادمین را پیکربندی نمایید. برای اتصال ربات تلگرام، توکن BotFather را در تنظیمات وارد کنید.</p>
+    <div class="img-placeholder">رابط کاربری VPNMarket (داشبورد لاراول و فیلامنت، منوی مدیریت کاربران و اشتراک‌ها)</div>
 
-    <h3>۴) نصب Xray VLESS + REALITY (مقاوم‌ترین روش)</h3>
-    <pre><code>apt install git
-git clone https://github.com/0xevn/xray-reality-setup.git
-cd xray-reality-setup
-chmod +x xray-setup.sh
-sh xray-setup.sh</code></pre>
-    <p>در پایان لینک <code>vless://</code> و QR Code دریافت می‌کنید. آن را در v2rayNG، Nekoray یا sing-box ایمپورت کنید.</p>
+    <h4>۱.۲ AmneziaVPN PHP Panel — مدیریت WireGuard و Amnezia</h4>
+    <p><strong>توضیح:</strong> یک پنل وب سبک برای مدیریت سرورهای Amnezia AWG (مبتنی بر WireGuard) که از پروتکل‌های متعدد مانند WireGuard، OpenVPN، Shadowsocks و XRay VLESS پشتیبانی می‌کند. بر پایه PHP 8.2+ و MySQL 8.0 ساخته شده است[reference:0].</p>
+    <p><strong>پیش‌نیازها:</strong> Docker و Docker Compose.</p>
+    <p><strong>نصب:</strong></p>
+    <pre><code>git clone https://github.com/infosave2007/amneziavpnphp.git
+cd amneziavpnphp
+cp .env.example .env
+docker compose up -d
+docker compose exec web composer install</code></pre>
+    <p>پس از اجرا، به آدرس <code>http://localhost:8082</code> مراجعه کنید. ورود پیش‌فرض: <code>admin@amnez.ia</code> / <code>admin123</code> (حتماً تغییر دهید).</p>
+    <div class="img-placeholder">پنل AmneziaVPN PHP (فرم افزودن سرور، لیست کلاینت‌ها، تولید QR Code، تنظیمات پروتکل)</div>
 
-    <h3>۵) راه‌اندازی سیستم فروش و مدیریت کاربران</h3>
-    <ul>
-      <li><strong>VPanel:</strong> پنل مدیریت و فروش با پشتیبانی از Marzban و X-UI — <a href="https://github.com/lkacom/vpanel" target="_blank" rel="noopener">github.com/lkacom/vpanel</a></li>
-      <li><strong>VPNMarket:</strong> پنل + ربات تلگرام + اپ اندروید — <a href="https://github.com/IranEclips/VPNMarket" target="_blank" rel="noopener">github.com/IranEclips/VPNMarket</a></li>
-      <li><strong>Hiddify Manager:</strong> پنل چندکاربره با ۲۰+ پروتکل — <a href="https://github.com/hiddify/Hiddify-Manager" target="_blank" rel="noopener">github.com/hiddify/Hiddify-Manager</a></li>
-      <li><strong>Marzban:</strong> پنل تخصصی Xray — <a href="https://github.com/Gozargah/Marzban" target="_blank" rel="noopener">github.com/Gozargah/Marzban</a></li>
-    </ul>
-    <p>نصب VPNMarket:</p>
-    <pre><code>bash &lt;(curl -sL https://raw.githubusercontent.com/IranEclips/VPNMarket/main/install.sh)</code></pre>
-    <p>نصب Hiddify Manager:</p>
-    <pre><code>bash &lt;(curl -sL https://github.com/hiddify/Hiddify-Manager/raw/main/install.sh)</code></pre>
-    <p>نصب Marzban:</p>
+    <h4>۱.۳ OpenVPN Web Panel Manager — مدیریت چندپروتکلی</h4>
+    <p><strong>توضیح:</strong> یک پنل جامع و self-hosted برای مدیریت OpenVPN، Cisco AnyConnect، L2TP/IPsec، WireGuard و Sing-box. از کاربران، نمایندگان (Reseller) و استقرار چندنودی پشتیبانی می‌کند و دارای API کامل است. بر پایه Flask (Python) ساخته شده اما رابط کاربری آن با HTML/CSS/JS پیاده‌سازی شده و در دسته پنل‌های وب قرار می‌گیرد[reference:1].</p>
+    <p><strong>نصب:</strong> طبق مستندات پروژه، معمولاً با کلون کردن مخزن و اجرای اسکریپت نصب انجام می‌شود. برای جزئیات به <a href="https://github.com/eylandoo/openvpn_webpanel_manager" target="_blank" rel="noopener">ریپازیتوری eylandoo/openvpn_webpanel_manager</a> مراجعه کنید.</p>
+
+    <!-- ===== Python Panels ===== -->
+    <h3>۲) پنل‌های مبتنی بر Python</h3>
+
+    <h4>۲.۱ Marzban — پنل حرفه‌ای Xray (پایتون + React)</h4>
+    <p><strong>توضیح:</strong> مرزبان یکی از محبوب‌ترین پنل‌های مدیریت پروکسی است که با Python و React.js ساخته شده و از Xray-core پشتیبانی می‌کند. رابط کاربری ساده و در عین حال قدرتمندی برای مدیریت صدها اکانت پروکسی ارائه می‌دهد[reference:2].</p>
+    <p><strong>نصب سریع (Ubuntu 22.04/24.04):</strong></p>
     <pre><code>sudo bash -c "$(curl -sL https://github.com/Gozargah/Marzban-scripts/raw/master/marzban.sh)" @ install</code></pre>
-    <div class="note">برای فروش: پس از نصب پنل، ربات تلگرام را با توکن BotFather پیکربندی کنید و درگاه پرداخت را وصل کنید. دسترسی ادمین را محدود و از کلید SSH استفاده کنید.</div>
+    <p>سپس با دستور <code>marzban cli admin create --sudo</code> یک ادمین بسازید و وارد پنل شوید.</p>
+    <div class="img-placeholder">داشبورد Marzban (نمودارهای ترافیک، مدیریت کاربران، تنظیمات نودها، لینک‌های اشتراک)</div>
 
-    <h3>۶) منابع گیت‌هاب</h3>
-    <ul class="source-list">
-      <li><a href="https://github.com/abdelrahman30x/TunnelBypass" target="_blank" rel="noopener">TunnelBypass</a></li>
-      <li><a href="https://github.com/0xevn/xray-reality-setup" target="_blank" rel="noopener">Xray Reality Setup</a></li>
-      <li><a href="https://github.com/seb0ch/vpn" target="_blank" rel="noopener">seb0ch/vpn</a></li>
-      <li><a href="https://github.com/13556547/Cloudflare-VPN" target="_blank" rel="noopener">Cloudflare-VLESS</a></li>
-      <li><a href="https://github.com/lkacom/vpanel" target="_blank" rel="noopener">VPanel</a></li>
-      <li><a href="https://github.com/IranEclips/VPNMarket" target="_blank" rel="noopener">VPNMarket</a></li>
-      <li><a href="https://github.com/hiddify/Hiddify-Manager" target="_blank" rel="noopener">Hiddify Manager</a></li>
-      <li><a href="https://github.com/Gozargah/Marzban" target="_blank" rel="noopener">Marzban</a></li>
+    <h4>۲.۲ Hiddify Manager — پنل چندکاربره با ۲۰+ پروتکل</h4>
+    <p><strong>توضیح:</strong> یک پنل ضد فیلترینگ چندکاربره که نصب آن بسیار ساده است و از بیش از ۲۰ پروتکل (شامل Reality، Telegram Proxy و...) پشتیبانی می‌کند. یک اپلیکیشن Flask است که Xray و SingBox را پشت یک رابط وب واحد مدیریت می‌کند[reference:3][reference:4].</p>
+    <p><strong>نصب:</strong></p>
+    <pre><code>bash <(curl -sL https://github.com/hiddify/Hiddify-Manager/raw/main/install.sh)</code></pre>
+    <p>پس از نصب، از طریق IP سرور به پنل دسترسی خواهید داشت.</p>
+
+    <h4>۲.۳ RVG (FastAPI) — گیت‌وی سبک و ماژولار</h4>
+    <p><strong>توضیح:</strong> یک گیت‌وی چندپروتکلی async و سبک‌وزن که روی FastAPI ساخته شده و پروتکل‌هایی مانند VLESS، Trojan، Shadowsocks و MTProto را به صورت هم‌زمان پشتیبانی می‌کند. دارای پنل مدیریت داخلی برای مدیریت کاربران و وضعیت سرویس است و برای استقرار سریع روی Railway طراحی شده است[reference:5].</p>
+    <p><strong>نصب:</strong> طبق مستندات پروژه، با کلون کردن مخزن و تنظیم متغیرهای محیطی انجام می‌شود. برای جزئیات به <a href="https://github.com/samimprd/RVG" target="_blank" rel="noopener">samimprd/RVG</a> مراجعه کنید.</p>
+
+    <h4>۲.۴ v2pi (FastAPI + Svelte) — گیت‌وی Xray برای شبکه محلی</h4>
+    <p><strong>توضیح:</strong> یک پنل سبک که یک لینوکس headless (مثل Raspberry Pi) را به یک گیت‌وی مدیریت‌شده Xray تبدیل می‌کند. از تنظیمات ضد DPI، مسیریابی مبتنی بر قانون (geoip/geosite)، فیل‌اور خودکار و کیل‌سوئیچ پشتیبانی می‌کند[reference:6].</p>
+    <p><strong>نصب:</strong> معمولاً با Docker. به <a href="https://github.com/pinusmassoniana/v2pi" target="_blank" rel="noopener">pinusmassoniana/v2pi</a> مراجعه کنید.</p>
+
+    <!-- ===== Comparison ===== -->
+    <h3>۳) مقایسه سریع</h3>
+    <ul>
+      <li><strong>VPNMarket (PHP):</strong> بهترین برای فروش و کسب‌وکار (ربات تلگرام + اپ اندروید + درگاه پرداخت).</li>
+      <li><strong>AmneziaVPN PHP:</strong> بهترین برای مدیریت سرورهای WireGuard/Amnezia با رابط ساده و Docker.</li>
+      <li><strong>Marzban (Python):</strong> بهترین برای مدیریت حرفه‌ای Xray با مقیاس‌پذیری بالا و جامعه کاربری بزرگ.</li>
+      <li><strong>Hiddify (Python):</strong> بهترین برای پشتیبانی از بیشترین تعداد پروتکل و مقاومت در برابر فیلترینگ.</li>
+      <li><strong>RVG / v2pi (Python):</strong> بهترین برای پروژه‌های سبک، استقرار سریع و شبکه‌های محلی.</li>
     </ul>
+
+    <div class="note">🔒 <strong>توصیه امنیتی:</strong> پس از نصب هر پنل، حتماً رمز عبور پیش‌فرض را تغییر دهید، دسترسی SSH را با کلید محدود کنید، گواهی SSL (HTTPS) را فعال نمایید و از فایروال (UFW) استفاده کنید.</div>
+
+    <!-- ===== Donate & Buy ===== -->
+    <h3>۴) حمایت مالی و خرید</h3>
+    <p>اگر این راهنما برایتان مفید بوده و مایل به حمایت از ادامه تولید محتوای آموزشی هستید، می‌توانید از طریق گزینه‌های زیر اقدام کنید. همچنین اگر به نسخه سفارشی‌سازی‌شده یا نصب و راه‌اندازی توسط تیم ما نیاز دارید، درخواست خود را ثبت کنید.</p>
+
+    <div class="support-section">
+      <div class="support-card donate">
+        <div class="icon">❤️</div>
+        <h3>حمایت مالی (Donate)</h3>
+        <p>از پروژه‌های متن‌باز و تولید راهنماهای آموزشی حمایت کنید. هر مبلغی، هر چقدر هم کوچک، ارزشمند است.</p>
+        <!-- لینک حمایت مالی خود را جایگزین کنید -->
+        <a href="https://github.com/sponsors/your-username" target="_blank" rel="noopener" class="btn btn-donate">💛 حمایت می‌کنم</a>
+      </div>
+      <div class="support-card buy">
+        <div class="icon">🛒</div>
+        <h3>خرید / سفارش</h3>
+        <p>نیاز به نصب، راه‌اندازی، سفارشی‌سازی یا پشتیبانی اختصاصی دارید؟ همین حالا سفارش خود را ثبت کنید.</p>
+        <!-- لینک خرید یا فرم سفارش خود را جایگزین کنید -->
+        <a href="https://your-domain.com/order" target="_blank" rel="noopener" class="btn btn-buy">🛒 ثبت سفارش</a>
+      </div>
+    </div>
+
+    <div class="note">💡 برای حمایت از پروژه‌های متن‌باز معرفی‌شده، می‌توانید مستقیماً به صفحه GitHub آن‌ها مراجعه کرده و از طریق لینک‌های Sponsor یا Donate آن‌ها حمایت کنید. برای مثال، Hiddify گزینه‌های حمایتی متنوعی (GitHub Sponsors، Patreon، Open Collective، Ko-fi و حتی بیت‌کوین) ارائه می‌دهد[reference:7].</div>
   </section>
 
   <!-- ================= EN ================= -->
   <section class="lang" id="en" lang="en" dir="ltr" hidden>
-    <h2>Complete Step-by-Step Guide to Building a Private VPN (Free + Commercial)</h2>
-    <div class="warn">This guide is for educational purposes. You are responsible for using it legally and complying with local laws.</div>
+    <h2>Comprehensive Guide to VPN Management Panels with PHP and Python</h2>
+    <div class="warn">⚠️ This guide is for educational purposes. You are responsible for using it legally and complying with local laws.</div>
 
-    <h3>1) Common Prerequisites</h3>
-    <ul>
-      <li>A client device: Windows, Mac, Android, or iOS.</li>
-      <li>A client app: WireGuard, v2rayNG, Nekoray, or sing-box.</li>
-      <li>For server methods: a VPS with root or sudo access.</li>
-    </ul>
+    <div class="toc">
+      <p>📑 Table of Contents</p>
+      <ul>
+        <li>PHP Panels (VPNMarket, AmneziaVPN, OpenVPN Manager)</li>
+        <li>Python Panels (Marzban, Hiddify, RVG, v2pi)</li>
+        <li>Quick Comparison & Security Tips</li>
+        <li>Donate & Buy Support</li>
+      </ul>
+    </div>
 
-    <h3>2) Completely Free Methods</h3>
-    <p><strong>2.1 Cloudflare Workers (VLESS over WebSocket)</strong></p>
-    <ol>
-      <li>Create a free Cloudflare account.</li>
-      <li>Create a new Worker under Workers &amp; Pages.</li>
-      <li>Paste code from projects such as <code>Cloudflare-VLESS</code> or <code>edgetunnel</code> from GitHub.</li>
-      <li>Set environment variables such as <code>UUID</code> and <code>HOST</code>.</li>
-      <li>After deployment, import the VLESS link or QR code into v2rayNG or sing-box.</li>
-    </ol>
-    <p><strong>2.2 Oracle Cloud Always Free</strong></p>
-    <ol>
-      <li>Sign up for Oracle Cloud Free Tier.</li>
-      <li>Create an Instance with Ubuntu 22.04/24.04.</li>
-      <li>Open required ports such as UDP 51820 or TCP 443 in the Security List.</li>
-      <li>Connect via SSH and run one of the methods in Section 3.</li>
-    </ol>
+    <p>This guide covers the best open-source VPN management panels developed with <span class="badge-php">PHP</span> and <span class="badge-py">Python</span>, with step-by-step installation instructions. These panels allow you to manage users, sell subscriptions, and control servers.</p>
 
-    <h3>3) Personal Server with Automated Scripts</h3>
-    <p><strong>3.1 Single-file WireGuard:</strong></p>
-    <pre><code>curl -sSL https://raw.githubusercontent.com/pradeeparul2/simple-wireguard-setup/main/wireguard-install.sh | sudo bash</code></pre>
-    <p>Download the client config:</p>
-    <pre><code>curl -o client-config.zip http://&lt;SERVER_IP&gt;/client-config.zip</code></pre>
+    <div class="img-placeholder">Overview of a VPN management panel (dashboard, user list, traffic charts, node status)</div>
 
-    <p><strong>3.2 TunnelBypass (multi-protocol):</strong></p>
-    <pre><code>curl -fsSL https://raw.githubusercontent.com/abdelrahman30x/TunnelBypass/main/scripts/install.sh | bash</code></pre>
-    <p>Then run <code>tunnelbypass</code> and choose a protocol such as <code>vless+reality</code>.</p>
+    <h3>1) PHP-Based Panels</h3>
 
-    <p><strong>3.3 Docker stack (AmneziaWG + Xray):</strong></p>
-    <pre><code>git clone https://github.com/seb0ch/vpn.git &amp;&amp; cd vpn
-sudo ./docker-install.sh
-sudo ./deploy.sh</code></pre>
+    <h4>1.1 VPNMarket (Laravel + Filament) — Best for Sales & Business</h4>
+    <p><strong>Description:</strong> A complete ecosystem for VPN management and sales, supporting Marzban and X-UI panels. It features an automated Telegram sales bot and an Android app.</p>
+    <p><strong>Prerequisites:</strong> Ubuntu 22.04, a domain, root access, PHP 8.1+, MySQL.</p>
+    <p><strong>One-command installation:</strong></p>
+    <pre><code>wget -O install.sh https://raw.githubusercontent.com/arvinvahed/VPNMarket/main/install.sh && sudo bash install.sh</code></pre>
+    <p>After installation, visit your domain in a browser and configure the admin panel. To connect the Telegram bot, enter your BotFather token in the settings.</p>
+    <div class="img-placeholder">VPNMarket UI (Laravel & Filament dashboard, user management and subscription menus)</div>
 
-    <h3>4) Xray VLESS + REALITY (Strongest Anti-Censorship)</h3>
-    <pre><code>apt install git
-git clone https://github.com/0xevn/xray-reality-setup.git
-cd xray-reality-setup
-chmod +x xray-setup.sh
-sh xray-setup.sh</code></pre>
-    <p>At the end you receive a <code>vless://</code> link and QR code. Import it into v2rayNG, Nekoray, or sing-box.</p>
+    <h4>1.2 AmneziaVPN PHP Panel — WireGuard & Amnezia Management</h4>
+    <p><strong>Description:</strong> A lightweight web panel for managing Amnezia AWG (WireGuard-based) servers, supporting multiple protocols such as WireGuard, OpenVPN, Shadowsocks, and XRay VLESS. Built on PHP 8.2+ and MySQL 8.0[reference:8].</p>
+    <p><strong>Prerequisites:</strong> Docker and Docker Compose.</p>
+    <p><strong>Installation:</strong></p>
+    <pre><code>git clone https://github.com/infosave2007/amneziavpnphp.git
+cd amneziavpnphp
+cp .env.example .env
+docker compose up -d
+docker compose exec web composer install</code></pre>
+    <p>Access at <code>http://localhost:8082</code>. Default login: <code>admin@amnez.ia</code> / <code>admin123</code> (change immediately).</p>
+    <div class="img-placeholder">AmneziaVPN PHP panel (add server form, client list, QR code generation, protocol settings)</div>
 
-    <h3>5) Sales and User Management System</h3>
-    <ul>
-      <li><strong>VPanel:</strong> management and sales panel supporting Marzban and X-UI — <a href="https://github.com/lkacom/vpanel" target="_blank" rel="noopener">github.com/lkacom/vpanel</a></li>
-      <li><strong>VPNMarket:</strong> panel + Telegram bot + Android app — <a href="https://github.com/IranEclips/VPNMarket" target="_blank" rel="noopener">github.com/IranEclips/VPNMarket</a></li>
-      <li><strong>Hiddify Manager:</strong> multi-user panel with 20+ protocols — <a href="https://github.com/hiddify/Hiddify-Manager" target="_blank" rel="noopener">github.com/hiddify/Hiddify-Manager</a></li>
-      <li><strong>Marzban:</strong> dedicated Xray panel — <a href="https://github.com/Gozargah/Marzban" target="_blank" rel="noopener">github.com/Gozargah/Marzban</a></li>
-    </ul>
-    <p>Install VPNMarket:</p>
-    <pre><code>bash &lt;(curl -sL https://raw.githubusercontent.com/IranEclips/VPNMarket/main/install.sh)</code></pre>
-    <p>Install Hiddify Manager:</p>
-    <pre><code>bash &lt;(curl -sL https://github.com/hiddify/Hiddify-Manager/raw/main/install.sh)</code></pre>
-    <p>Install Marzban:</p>
+    <h4>1.3 OpenVPN Web Panel Manager — Multi-Protocol Management</h4>
+    <p><strong>Description:</strong> A comprehensive self-hosted web panel for managing OpenVPN, Cisco AnyConnect, L2TP/IPsec, WireGuard, and Sing-box servers. Supports users, resellers, and multi-node deployments with a full API[reference:9].</p>
+    <p><strong>Installation:</strong> Typically involves cloning the repo and running an install script. See the <a href="https://github.com/eylandoo/openvpn_webpanel_manager" target="_blank" rel="noopener">eylandoo/openvpn_webpanel_manager</a> repository for details.</p>
+
+    <h3>2) Python-Based Panels</h3>
+
+    <h4>2.1 Marzban — Professional Xray Panel (Python + React)</h4>
+    <p><strong>Description:</strong> Marzban is one of the most popular proxy management panels, built with Python and React.js and powered by Xray-core. It provides a simple yet powerful interface for managing hundreds of proxy accounts[reference:10].</p>
+    <p><strong>Quick install (Ubuntu 22.04/24.04):</strong></p>
     <pre><code>sudo bash -c "$(curl -sL https://github.com/Gozargah/Marzban-scripts/raw/master/marzban.sh)" @ install</code></pre>
-    <div class="note">For sales: after installing the panel, configure the Telegram bot with a BotFather token and connect a payment gateway. Restrict admin access and use SSH keys.</div>
+    <p>Then create an admin with <code>marzban cli admin create --sudo</code> and log in.</p>
+    <div class="img-placeholder">Marzban dashboard (traffic charts, user management, node settings, subscription links)</div>
 
-    <h3>6) GitHub Sources</h3>
-    <ul class="source-list">
-      <li><a href="https://github.com/abdelrahman30x/TunnelBypass" target="_blank" rel="noopener">TunnelBypass</a></li>
-      <li><a href="https://github.com/0xevn/xray-reality-setup" target="_blank" rel="noopener">Xray Reality Setup</a></li>
-      <li><a href="https://github.com/seb0ch/vpn" target="_blank" rel="noopener">seb0ch/vpn</a></li>
-      <li><a href="https://github.com/13556547/Cloudflare-VPN" target="_blank" rel="noopener">Cloudflare-VLESS</a></li>
-      <li><a href="https://github.com/lkacom/vpanel" target="_blank" rel="noopener">VPanel</a></li>
-      <li><a href="https://github.com/IranEclips/VPNMarket" target="_blank" rel="noopener">VPNMarket</a></li>
-      <li><a href="https://github.com/hiddify/Hiddify-Manager" target="_blank" rel="noopener">Hiddify Manager</a></li>
-      <li><a href="https://github.com/Gozargah/Marzban" target="_blank" rel="noopener">Marzban</a></li>
+    <h4>2.2 Hiddify Manager — Multi-User Panel with 20+ Protocols</h4>
+    <p><strong>Description:</strong> A multi-user anti-censorship panel with effortless installation, supporting over 20 protocols (including Reality and Telegram Proxy). It is a Flask application that manages Xray and SingBox backends behind a single web interface[reference:11][reference:12].</p>
+    <p><strong>Installation:</strong></p>
+    <pre><code>bash <(curl -sL https://github.com/hiddify/Hiddify-Manager/raw/main/install.sh)</code></pre>
+    <p>After installation, access the panel via your server's IP address.</p>
+
+    <h4>2.3 RVG (FastAPI) — Lightweight & Modular Gateway</h4>
+    <p><strong>Description:</strong> A lightweight async multi-protocol gateway built on FastAPI, supporting VLESS, Trojan, Shadowsocks, and MTProto simultaneously. It includes a built-in admin panel for managing users and service status, designed for quick deployment on Railway[reference:13].</p>
+    <p><strong>Installation:</strong> Clone the repo and configure environment variables. See <a href="https://github.com/samimprd/RVG" target="_blank" rel="noopener">samimprd/RVG</a> for details.</p>
+
+    <h4>2.4 v2pi (FastAPI + Svelte) — Xray Gateway for LAN</h4>
+    <p><strong>Description:</strong> A lightweight panel that turns a headless Linux box (e.g., Raspberry Pi) into a managed Xray VPN gateway. It supports anti-DPI tuning, rule-based routing (geoip/geosite), health failover, and a kill-switch[reference:14].</p>
+    <p><strong>Installation:</strong> Typically via Docker. See <a href="https://github.com/pinusmassoniana/v2pi" target="_blank" rel="noopener">pinusmassoniana/v2pi</a>.</p>
+
+    <h3>3) Quick Comparison</h3>
+    <ul>
+      <li><strong>VPNMarket (PHP):</strong> Best for sales and business (Telegram bot + Android app + payment gateway).</li>
+      <li><strong>AmneziaVPN PHP:</strong> Best for managing WireGuard/Amnezia servers with a simple Docker-based UI.</li>
+      <li><strong>Marzban (Python):</strong> Best for professional Xray management with high scalability and a large community.</li>
+      <li><strong>Hiddify (Python):</strong> Best for supporting the widest range of protocols and resisting censorship.</li>
+      <li><strong>RVG / v2pi (Python):</strong> Best for lightweight projects, quick deployment, and LAN gateways.</li>
     </ul>
+
+    <div class="note">🔒 <strong>Security Tip:</strong> After installing any panel, change default passwords, restrict SSH access with keys, enable SSL (HTTPS), and use a firewall (UFW).</div>
+
+    <h3>4) Donate & Buy Support</h3>
+    <p>If this guide has been helpful and you'd like to support continued creation of educational content, you can use the options below. If you need a customized version or professional installation and setup, submit a request.</p>
+
+    <div class="support-section">
+      <div class="support-card donate">
+        <div class="icon">❤️</div>
+        <h3>Donate</h3>
+        <p>Support open-source projects and educational guides. Every contribution, no matter how small, is valuable.</p>
+        <a href="https://github.com/sponsors/your-username" target="_blank" rel="noopener" class="btn btn-donate">💛 Donate Now</a>
+      </div>
+      <div class="support-card buy">
+        <div class="icon">🛒</div>
+        <h3>Buy / Order</h3>
+        <p>Need installation, setup, customization, or dedicated support? Place your order now.</p>
+        <a href="https://your-domain.com/order" target="_blank" rel="noopener" class="btn btn-buy">🛒 Place Order</a>
+      </div>
+    </div>
+
+    <div class="note">💡 To support the open-source projects featured here, you can visit their GitHub pages directly and use their Sponsor or Donate links. For example, Hiddify offers various support options (GitHub Sponsors, Patreon, Open Collective, Ko-fi, and even Bitcoin)[reference:15].</div>
   </section>
 
   <!-- ================= AR ================= -->
   <section class="lang" id="ar" lang="ar" dir="rtl" hidden>
-    <h2>دليل شامل خطوة بخطوة لبناء VPN خاص (مجاني + تجاري)</h2>
-    <div class="warn">هذا الدليل لأغراض تعليمية. أنت مسؤول عن الاستخدام القانوني والالتزام بقوانين بلدك.</div>
+    <h2>دليل شامل للوحات إدارة VPN باستخدام PHP و Python</h2>
+    <div class="warn">⚠️ هذا الدليل لأغراض تعليمية. أنت مسؤول عن الاستخدام القانوني والالتزام بقوانين بلدك.</div>
 
-    <h3>١) المتطلبات المشتركة</h3>
-    <ul>
-      <li>جهاز عميل: Windows أو Mac أو Android أو iOS.</li>
-      <li>تطبيق عميل: WireGuard أو v2rayNG أو Nekoray أو sing-box.</li>
-      <li>لطرق الخادم: VPS مع صلاحية root أو sudo.</li>
-    </ul>
+    <p>يغطي هذا الدليل أفضل لوحات إدارة VPN مفتوحة المصدر المطورة بلغتي <span class="badge-php">PHP</span> و <span class="badge-py">Python</span>، مع تعليمات التثبيت خطوة بخطوة. تتيح لك هذه اللوحات إدارة المستخدمين وبيع الاشتراكات والتحكم في الخوادم.</p>
 
-    <h3>٢) طرق مجانية بالكامل</h3>
-    <p><strong>٢.١ Cloudflare Workers (VLESS over WebSocket)</strong></p>
-    <ol>
-      <li>أنشئ حساب Cloudflare مجاني.</li>
-      <li>أنشئ Worker جديدًا من Workers &amp; Pages.</li>
-      <li>ضع كود مشاريع مثل <code>Cloudflare-VLESS</code> أو <code>edgetunnel</code> من GitHub.</li>
-      <li>اضبط متغيرات البيئة مثل <code>UUID</code> و <code>HOST</code>.</li>
-      <li>بعد النشر، استورد رابط VLESS أو رمز QR في v2rayNG أو sing-box.</li>
-    </ol>
-    <p><strong>٢.٢ Oracle Cloud Always Free</strong></p>
-    <ol>
-      <li>سجّل في Oracle Cloud Free Tier.</li>
-      <li>أنشئ Instance بنظام Ubuntu 22.04/24.04.</li>
-      <li>افتح المنافذ المطلوبة مثل UDP 51820 أو TCP 443 في Security List.</li>
-      <li>اتصل عبر SSH ونفّذ إحدى طرق القسم ٣.</li>
-    </ol>
+    <div class="img-placeholder">نظرة عامة على لوحة إدارة VPN (لوحة التحكم، قائمة المستخدمين، مخططات المرور، حالة العقد)</div>
 
-    <h3>٣) خادم شخصي باستخدام سكريبتات تلقائية</h3>
-    <p><strong>٣.١ WireGuard أحادي الملف:</strong></p>
-    <pre><code>curl -sSL https://raw.githubusercontent.com/pradeeparul2/simple-wireguard-setup/main/wireguard-install.sh | sudo bash</code></pre>
-    <p>تنزيل إعداد العميل:</p>
-    <pre><code>curl -o client-config.zip http://&lt;SERVER_IP&gt;/client-config.zip</code></pre>
+    <h3>١) لوحات مبنية على PHP</h3>
 
-    <p><strong>٣.٢ TunnelBypass (متعدد البروتوكولات):</strong></p>
-    <pre><code>curl -fsSL https://raw.githubusercontent.com/abdelrahman30x/TunnelBypass/main/scripts/install.sh | bash</code></pre>
-    <p>ثم نفّذ <code>tunnelbypass</code> واختر بروتوكولًا مثل <code>vless+reality</code>.</p>
+    <h4>١.١ VPNMarket (لارافيل + فيلامنت) — الأفضل للبيع والأعمال</h4>
+    <p><strong>الوصف:</strong> نظام بيئي كامل لإدارة وبيع VPN، يدعم لوحات Marzban و X-UI. يتميز بروبوت بيع تلقائي على تلغرام وتطبيق أندرويد.</p>
+    <p><strong>المتطلبات:</strong> Ubuntu 22.04، نطاق، صلاحية root، PHP 8.1+، MySQL.</p>
+    <p><strong>التثبيت بأمر واحد:</strong></p>
+    <pre><code>wget -O install.sh https://raw.githubusercontent.com/arvinvahed/VPNMarket/main/install.sh && sudo bash install.sh</code></pre>
+    <p>بعد التثبيت، قم بزيارة نطاقك في المتصفح وقم بتكوين لوحة الإدارة. لربط روبوت تلغرام، أدخل رمز BotFather في الإعدادات.</p>
+    <div class="img-placeholder">واجهة VPNMarket (لوحة تحكم لارافيل وفيلامنت، قائمة إدارة المستخدمين والاشتراكات)</div>
 
-    <p><strong>٣.٣ حزمة Docker (AmneziaWG + Xray):</strong></p>
-    <pre><code>git clone https://github.com/seb0ch/vpn.git &amp;&amp; cd vpn
-sudo ./docker-install.sh
-sudo ./deploy.sh</code></pre>
+    <h4>١.٢ لوحة AmneziaVPN PHP — إدارة WireGuard و Amnezia</h4>
+    <p><strong>الوصف:</strong> لوحة ويب خفيفة لإدارة خوادم Amnezia AWG (القائمة على WireGuard)، وتدعم بروتوكولات متعددة مثل WireGuard و OpenVPN و Shadowsocks و XRay VLESS. مبنية على PHP 8.2+ و MySQL 8.0[reference:16].</p>
+    <p><strong>المتطلبات:</strong> Docker و Docker Compose.</p>
+    <p><strong>التثبيت:</strong></p>
+    <pre><code>git clone https://github.com/infosave2007/amneziavpnphp.git
+cd amneziavpnphp
+cp .env.example .env
+docker compose up -d
+docker compose exec web composer install</code></pre>
+    <p>الوصول عبر <code>http://localhost:8082</code>. تسجيل الدخول الافتراضي: <code>admin@amnez.ia</code> / <code>admin123</code> (غيّره فوراً).</p>
+    <div class="img-placeholder">لوحة AmneziaVPN PHP (نموذج إضافة خادم، قائمة العملاء، إنشاء رمز QR، إعدادات البروتوكول)</div>
 
-    <h3>٤) تثبيت Xray VLESS + REALITY (الأقوى ضد الحجب)</h3>
-    <pre><code>apt install git
-git clone https://github.com/0xevn/xray-reality-setup.git
-cd xray-reality-setup
-chmod +x xray-setup.sh
-sh xray-setup.sh</code></pre>
-    <p>في النهاية تحصل على رابط <code>vless://</code> ورمز QR. استوردهما في v2rayNG أو Nekoray أو sing-box.</p>
+    <h4>١.٣ OpenVPN Web Panel Manager — إدارة متعددة البروتوكولات</h4>
+    <p><strong>الوصف:</strong> لوحة ويب شاملة ذاتية الاستضافة لإدارة OpenVPN و Cisco AnyConnect و L2TP/IPsec و WireGuard و Sing-box. تدعم المستخدمين والوكلاء (Reseller) والنشر متعدد العقد مع API كامل[reference:17].</p>
+    <p><strong>التثبيت:</strong> راجع مستودع <a href="https://github.com/eylandoo/openvpn_webpanel_manager" target="_blank" rel="noopener">eylandoo/openvpn_webpanel_manager</a>.</p>
 
-    <h3>٥) نظام البيع وإدارة المستخدمين</h3>
-    <ul>
-      <li><strong>VPanel:</strong> لوحة إدارة وبيع تدعم Marzban و X-UI — <a href="https://github.com/lkacom/vpanel" target="_blank" rel="noopener">github.com/lkacom/vpanel</a></li>
-      <li><strong>VPNMarket:</strong> لوحة + بوت تلغرام + تطبيق أندرويد — <a href="https://github.com/IranEclips/VPNMarket" target="_blank" rel="noopener">github.com/IranEclips/VPNMarket</a></li>
-      <li><strong>Hiddify Manager:</strong> لوحة متعددة المستخدمين مع 20+ بروتوكول — <a href="https://github.com/hiddify/Hiddify-Manager" target="_blank" rel="noopener">github.com/hiddify/Hiddify-Manager</a></li>
-      <li><strong>Marzban:</strong> لوحة Xray متخصصة — <a href="https://github.com/Gozargah/Marzban" target="_blank" rel="noopener">github.com/Gozargah/Marzban</a></li>
-    </ul>
-    <p>تثبيت VPNMarket:</p>
-    <pre><code>bash &lt;(curl -sL https://raw.githubusercontent.com/IranEclips/VPNMarket/main/install.sh)</code></pre>
-    <p>تثبيت Hiddify Manager:</p>
-    <pre><code>bash &lt;(curl -sL https://github.com/hiddify/Hiddify-Manager/raw/main/install.sh)</code></pre>
-    <p>تثبيت Marzban:</p>
+    <h3>٢) لوحات مبنية على Python</h3>
+
+    <h4>٢.١ Marzban — لوحة Xray احترافية (Python + React)</h4>
+    <p><strong>الوصف:</strong> مرزبان من أشهر لوحات إدارة البروكسي، مبنية بـ Python و React.js وتعمل بـ Xray-core. توفر واجهة بسيطة وقوية لإدارة مئات حسابات البروكسي[reference:18].</p>
+    <p><strong>التثبيت السريع (Ubuntu 22.04/24.04):</strong></p>
     <pre><code>sudo bash -c "$(curl -sL https://github.com/Gozargah/Marzban-scripts/raw/master/marzban.sh)" @ install</code></pre>
-    <div class="note">للبيع: بعد تثبيت اللوحة، اضبط بوت تلغرام باستخدام توكن BotFather واربط بوابة الدفع. قيّد صلاحيات المسؤول واستخدم مفاتيح SSH.</div>
+    <p>ثم أنشئ مسؤولاً بالأمر <code>marzban cli admin create --sudo</code> وسجّل الدخول.</p>
+    <div class="img-placeholder">لوحة تحكم Marzban (مخططات المرور، إدارة المستخدمين، إعدادات العقد، روابط الاشتراك)</div>
 
-    <h3>٦) مصادر GitHub</h3>
-    <ul class="source-list">
-      <li><a href="https://github.com/abdelrahman30x/TunnelBypass" target="_blank" rel="noopener">TunnelBypass</a></li>
-      <li><a href="https://github.com/0xevn/xray-reality-setup" target="_blank" rel="noopener">Xray Reality Setup</a></li>
-      <li><a href="https://github.com/seb0ch/vpn" target="_blank" rel="noopener">seb0ch/vpn</a></li>
-      <li><a href="https://github.com/13556547/Cloudflare-VPN" target="_blank" rel="noopener">Cloudflare-VLESS</a></li>
-      <li><a href="https://github.com/lkacom/vpanel" target="_blank" rel="noopener">VPanel</a></li>
-      <li><a href="https://github.com/IranEclips/VPNMarket" target="_blank" rel="noopener">VPNMarket</a></li>
-      <li><a href="https://github.com/hiddify/Hiddify-Manager" target="_blank" rel="noopener">Hiddify Manager</a></li>
-      <li><a href="https://github.com/Gozargah/Marzban" target="_blank" rel="noopener">Marzban</a></li>
+    <h4>٢.٢ Hiddify Manager — لوحة متعددة المستخدمين مع 20+ بروتوكول</h4>
+    <p><strong>الوصف:</strong> لوحة ضد الحجب متعددة المستخدمين سهلة التثبيت، تدعم أكثر من 20 بروتوكولاً (بما فيها Reality و Telegram Proxy). تطبيق Flask يدير Xray و SingBox خلف واجهة ويب واحدة[reference:19][reference:20].</p>
+    <p><strong>التثبيت:</strong></p>
+    <pre><code>bash <(curl -sL https://github.com/hiddify/Hiddify-Manager/raw/main/install.sh)</code></pre>
+
+    <h4>٢.٣ RVG (FastAPI) — بوابة خفيفة ووحدات</h4>
+    <p><strong>الوصف:</strong> بوابة متعددة البروتوكولات خفيفة مبنية على FastAPI، تدعم VLESS و Trojan و Shadowsocks و MTProto في وقت واحد. تتضمن لوحة إدارة داخلية لإدارة المستخدمين وحالة الخدمة، مصممة للنشر السريع على Railway[reference:21].</p>
+
+    <h4>٢.٤ v2pi (FastAPI + Svelte) — بوابة Xray للشبكة المحلية</h4>
+    <p><strong>الوصف:</strong> لوحة خفيفة تحول صندوق Linux بلا واجهة (مثل Raspberry Pi) إلى بوابة Xray VPN مُدارة. تدعم ضبط مكافحة DPI والتوجيه القائم على القواعد والتبديل التلقائي عند الفشل ومفتاح الإيقاف[reference:22].</p>
+
+    <h3>٣) مقارنة سريعة</h3>
+    <ul>
+      <li><strong>VPNMarket (PHP):</strong> الأفضل للبيع والأعمال (روبوت تلغرام + تطبيق أندرويد + بوابة دفع).</li>
+      <li><strong>AmneziaVPN PHP:</strong> الأفضل لإدارة خوادم WireGuard/Amnezia بواجهة Docker بسيطة.</li>
+      <li><strong>Marzban (Python):</strong> الأفضل لإدارة Xray الاحترافية مع قابلية توسع عالية ومجتمع كبير.</li>
+      <li><strong>Hiddify (Python):</strong> الأفضل لأوسع نطاق من البروتوكولات ومقاومة الحجب.</li>
+      <li><strong>RVG / v2pi (Python):</strong> الأفضل للمشاريع الخفيفة والنشر السريع وبوابات الشبكة المحلية.</li>
     </ul>
+
+    <div class="note">🔒 <strong>نصيحة أمنية:</strong> بعد تثبيت أي لوحة، غيّر كلمات المرور الافتراضية، وقيّد الوصول عبر SSH باستخدام المفاتيح، وفعّل شهادة SSL (HTTPS)، واستخدم جدار حماية (UFW).</div>
+
+    <h3>٤) الدعم المالي والشراء</h3>
+    <p>إذا كان هذا الدليل مفيدًا وترغب في دعم استمرار إنشاء المحتوى التعليمي، يمكنك استخدام الخيارات أدناه. إذا كنت بحاجة إلى نسخة مخصصة أو تثبيت وإعداد احترافي، فقدم طلبك.</p>
+
+    <div class="support-section">
+      <div class="support-card donate">
+        <div class="icon">❤️</div>
+        <h3>تبرع</h3>
+        <p>ادعم المشاريع مفتوحة المصدر والأدلة التعليمية. كل مساهمة، مهما كانت صغيرة، قيمة.</p>
+        <a href="https://github.com/sponsors/your-username" target="_blank" rel="noopener" class="btn btn-donate">💛 تبرع الآن</a>
+      </div>
+      <div class="support-card buy">
+        <div class="icon">🛒</div>
+        <h3>شراء / طلب</h3>
+        <p>تحتاج إلى تثبيت أو إعداد أو تخصيص أو دعم مخصص؟ قدم طلبك الآن.</p>
+        <a href="https://your-domain.com/order" target="_blank" rel="noopener" class="btn btn-buy">🛒 تقديم طلب</a>
+      </div>
+    </div>
+
+    <div class="note">💡 لدعم المشاريع مفتوحة المصدر المذكورة هنا، يمكنك زيارة صفحاتها على GitHub واستخدام روابط الرعاية أو التبرع الخاصة بها. على سبيل المثال، تقدم Hiddify خيارات دعم متنوعة (GitHub Sponsors، Patreon، Open Collective، Ko-fi وحتى Bitcoin)[reference:23].</div>
   </section>
 
   <!-- ================= ZH ================= -->
   <section class="lang" id="zh" lang="zh" dir="ltr" hidden>
-    <h2>搭建私人 VPN 的完整分步指南（免费 + 商业）</h2>
-    <div class="warn">本指南仅供教育用途。请自行确保合法使用并遵守当地法律。</div>
+    <h2>PHP 和 Python VPN 管理面板综合指南</h2>
+    <div class="warn">⚠️ 本指南仅供教育用途。请自行确保合法使用并遵守当地法律。</div>
 
-    <h3>1) 通用前提条件</h3>
-    <ul>
-      <li>客户端设备：Windows、Mac、Android 或 iOS。</li>
-      <li>客户端应用：WireGuard、v2rayNG、Nekoray 或 sing-box。</li>
-      <li>服务器方法需要：具有 root 或 sudo 权限的 VPS。</li>
-    </ul>
+    <p>本指南涵盖使用 <span class="badge-php">PHP</span> 和 <span class="badge-py">Python</span> 开发的最佳开源 VPN 管理面板，并提供分步安装说明。这些面板可让您管理用户、销售订阅并控制服务器。</p>
 
-    <h3>2) 完全免费的方法</h3>
-    <p><strong>2.1 Cloudflare Workers（VLESS over WebSocket）</strong></p>
-    <ol>
-      <li>创建免费 Cloudflare 账户。</li>
-      <li>在 Workers &amp; Pages 中创建新的 Worker。</li>
-      <li>从 GitHub 复制 <code>Cloudflare-VLESS</code> 或 <code>edgetunnel</code> 等项目的代码。</li>
-      <li>设置环境变量，如 <code>UUID</code> 和 <code>HOST</code>。</li>
-      <li>部署后，将 VLESS 链接或二维码导入 v2rayNG 或 sing-box。</li>
-    </ol>
-    <p><strong>2.2 Oracle Cloud Always Free</strong></p>
-    <ol>
-      <li>注册 Oracle Cloud Free Tier。</li>
-      <li>创建 Ubuntu 22.04/24.04 实例。</li>
-      <li>在 Security List 中开放 UDP 51820 或 TCP 443 等端口。</li>
-      <li>通过 SSH 连接并运行第 3 部分的方法。</li>
-    </ol>
+    <div class="img-placeholder">VPN 管理面板概览（仪表板、用户列表、流量图表、节点状态）</div>
 
-    <h3>3) 使用自动脚本搭建个人服务器</h3>
-    <p><strong>3.1 单文件 WireGuard：</strong></p>
-    <pre><code>curl -sSL https://raw.githubusercontent.com/pradeeparul2/simple-wireguard-setup/main/wireguard-install.sh | sudo bash</code></pre>
-    <p>下载客户端配置：</p>
-    <pre><code>curl -o client-config.zip http://&lt;SERVER_IP&gt;/client-config.zip</code></pre>
+    <h3>1) 基于 PHP 的面板</h3>
 
-    <p><strong>3.2 TunnelBypass（多协议）：</strong></p>
-    <pre><code>curl -fsSL https://raw.githubusercontent.com/abdelrahman30x/TunnelBypass/main/scripts/install.sh | bash</code></pre>
-    <p>然后运行 <code>tunnelbypass</code> 并选择 <code>vless+reality</code> 等协议。</p>
+    <h4>1.1 VPNMarket（Laravel + Filament）— 最适合销售和业务</h4>
+    <p><strong>描述：</strong> 一个完整的 VPN 管理和销售生态系统，支持 Marzban 和 X-UI 面板。它具有自动 Telegram 销售机器人和 Android 应用。</p>
+    <p><strong>前提条件：</strong> Ubuntu 22.04、域名、root 权限、PHP 8.1+、MySQL。</p>
+    <p><strong>一键安装：</strong></p>
+    <pre><code>wget -O install.sh https://raw.githubusercontent.com/arvinvahed/VPNMarket/main/install.sh && sudo bash install.sh</code></pre>
+    <p>安装后，在浏览器中访问您的域名并配置管理面板。要连接 Telegram 机器人，请在设置中输入 BotFather 令牌。</p>
+    <div class="img-placeholder">VPNMarket 界面（Laravel 和 Filament 仪表板、用户管理和订阅菜单）</div>
 
-    <p><strong>3.3 Docker 栈（AmneziaWG + Xray）：</strong></p>
-    <pre><code>git clone https://github.com/seb0ch/vpn.git &amp;&amp; cd vpn
-sudo ./docker-install.sh
-sudo ./deploy.sh</code></pre>
+    <h4>1.2 AmneziaVPN PHP 面板 — WireGuard 和 Amnezia 管理</h4>
+    <p><strong>描述：</strong> 一个轻量级 Web 面板，用于管理 Amnezia AWG（基于 WireGuard）服务器，支持 WireGuard、OpenVPN、Shadowsocks 和 XRay VLESS 等多种协议。基于 PHP 8.2+ 和 MySQL 8.0 构建[reference:24]。</p>
+    <p><strong>前提条件：</strong> Docker 和 Docker Compose。</p>
+    <p><strong>安装：</strong></p>
+    <pre><code>git clone https://github.com/infosave2007/amneziavpnphp.git
+cd amneziavpnphp
+cp .env.example .env
+docker compose up -d
+docker compose exec web composer install</code></pre>
+    <p>访问 <code>http://localhost:8082</code>。默认登录：<code>admin@amnez.ia</code> / <code>admin123</code>（请立即更改）。</p>
+    <div class="img-placeholder">AmneziaVPN PHP 面板（添加服务器表单、客户端列表、二维码生成、协议设置）</div>
 
-    <h3>4) 安装 Xray VLESS + REALITY（最强抗封锁）</h3>
-    <pre><code>apt install git
-git clone https://github.com/0xevn/xray-reality-setup.git
-cd xray-reality-setup
-chmod +x xray-setup.sh
-sh xray-setup.sh</code></pre>
-    <p>完成后会得到 <code>vless://</code> 链接和二维码，导入 v2rayNG、Nekoray 或 sing-box。</p>
+    <h4>1.3 OpenVPN Web Panel Manager — 多协议管理</h4>
+    <p><strong>描述：</strong> 一个全面的自托管 Web 面板，用于管理 OpenVPN、Cisco AnyConnect、L2TP/IPsec、WireGuard 和 Sing-box 服务器。支持用户、代理商和多节点部署，并提供完整的 API[reference:25]。</p>
 
-    <h3>5) 销售与用户管理系统</h3>
-    <ul>
-      <li><strong>VPanel：</strong>支持 Marzban 和 X-UI 的管理与销售面板 — <a href="https://github.com/lkacom/vpanel" target="_blank" rel="noopener">github.com/lkacom/vpanel</a></li>
-      <li><strong>VPNMarket：</strong>面板 + Telegram 机器人 + Android 应用 — <a href="https://github.com/IranEclips/VPNMarket" target="_blank" rel="noopener">github.com/IranEclips/VPNMarket</a></li>
-      <li><strong>Hiddify Manager：</strong>支持 20+ 协议的多用户面板 — <a href="https://github.com/hiddify/Hiddify-Manager" target="_blank" rel="noopener">github.com/hiddify/Hiddify-Manager</a></li>
-      <li><strong>Marzban：</strong>专用 Xray 面板 — <a href="https://github.com/Gozargah/Marzban" target="_blank" rel="noopener">github.com/Gozargah/Marzban</a></li>
-    </ul>
-    <p>安装 VPNMarket：</p>
-    <pre><code>bash &lt;(curl -sL https://raw.githubusercontent.com/IranEclips/VPNMarket/main/install.sh)</code></pre>
-    <p>安装 Hiddify Manager：</p>
-    <pre><code>bash &lt;(curl -sL https://github.com/hiddify/Hiddify-Manager/raw/main/install.sh)</code></pre>
-    <p>安装 Marzban：</p>
+    <h3>2) 基于 Python 的面板</h3>
+
+    <h4>2.1 Marzban — 专业 Xray 面板（Python + React）</h4>
+    <p><strong>描述：</strong> Marzban 是最流行的代理管理面板之一，使用 Python 和 React.js 构建，由 Xray-core 驱动。它提供了一个简单而强大的界面来管理数百个代理账户[reference:26]。</p>
+    <p><strong>快速安装（Ubuntu 22.04/24.04）：</strong></p>
     <pre><code>sudo bash -c "$(curl -sL https://github.com/Gozargah/Marzban-scripts/raw/master/marzban.sh)" @ install</code></pre>
-    <div class="note">销售提示：安装面板后，用 BotFather 令牌配置 Telegram 机器人并接入支付网关。限制管理员权限并使用 SSH 密钥。</div>
+    <div class="img-placeholder">Marzban 仪表板（流量图表、用户管理、节点设置、订阅链接）</div>
 
-    <h3>6) GitHub 资源</h3>
-    <ul class="source-list">
-      <li><a href="https://github.com/abdelrahman30x/TunnelBypass" target="_blank" rel="noopener">TunnelBypass</a></li>
-      <li><a href="https://github.com/0xevn/xray-reality-setup" target="_blank" rel="noopener">Xray Reality Setup</a></li>
-      <li><a href="https://github.com/seb0ch/vpn" target="_blank" rel="noopener">seb0ch/vpn</a></li>
-      <li><a href="https://github.com/13556547/Cloudflare-VPN" target="_blank" rel="noopener">Cloudflare-VLESS</a></li>
-      <li><a href="https://github.com/lkacom/vpanel" target="_blank" rel="noopener">VPanel</a></li>
-      <li><a href="https://github.com/IranEclips/VPNMarket" target="_blank" rel="noopener">VPNMarket</a></li>
-      <li><a href="https://github.com/hiddify/Hiddify-Manager" target="_blank" rel="noopener">Hiddify Manager</a></li>
-      <li><a href="https://github.com/Gozargah/Marzban" target="_blank" rel="noopener">Marzban</a></li>
+    <h4>2.2 Hiddify Manager — 支持 20+ 协议的多用户面板</h4>
+    <p><strong>描述：</strong> 一个多用户反审查面板，安装简便，支持超过 20 种协议（包括 Reality 和 Telegram Proxy）。它是一个 Flask 应用程序，在单个 Web 界面后管理 Xray 和 SingBox 后端[reference:27][reference:28]。</p>
+    <p><strong>安装：</strong></p>
+    <pre><code>bash <(curl -sL https://github.com/hiddify/Hiddify-Manager/raw/main/install.sh)</code></pre>
+
+    <h4>2.3 RVG (FastAPI) — 轻量级模块化网关</h4>
+    <p><strong>描述：</strong> 一个基于 FastAPI 的轻量级异步多协议网关，同时支持 VLESS、Trojan、Shadowsocks 和 MTProto。它包括用于管理用户和服务状态的内置管理面板，专为在 Railway 上快速部署而设计[reference:29]。</p>
+
+    <h4>2.4 v2pi (FastAPI + Svelte) — 局域网 Xray 网关</h4>
+    <p><strong>描述：</strong> 一个轻量级面板，可将无头 Linux 设备（如 Raspberry Pi）转变为受管理的 Xray VPN 网关。它支持抗 DPI 调优、基于规则的路由（geoip/geosite）、健康故障转移和终止开关[reference:30]。</p>
+
+    <h3>3) 快速比较</h3>
+    <ul>
+      <li><strong>VPNMarket (PHP)：</strong> 最适合销售和业务（Telegram 机器人 + Android 应用 + 支付网关）。</li>
+      <li><strong>AmneziaVPN PHP：</strong> 最适合通过简单的 Docker UI 管理 WireGuard/Amnezia 服务器。</li>
+      <li><strong>Marzban (Python)：</strong> 最适合具有高可扩展性和庞大社区的专业 Xray 管理。</li>
+      <li><strong>Hiddify (Python)：</strong> 最适合支持最广泛的协议和抵抗审查。</li>
+      <li><strong>RVG / v2pi (Python)：</strong> 最适合轻量级项目、快速部署和局域网网关。</li>
     </ul>
+
+    <div class="note">🔒 <strong>安全提示：</strong> 安装任何面板后，请更改默认密码，使用密钥限制 SSH 访问，启用 SSL (HTTPS)，并使用防火墙 (UFW)。</div>
+
+    <h3>4) 捐赠与购买支持</h3>
+    <p>如果本指南对您有帮助，并希望支持继续创作教育内容，您可以使用以下选项。如果您需要定制版本或专业安装和设置，请提交请求。</p>
+
+    <div class="support-section">
+      <div class="support-card donate">
+        <div class="icon">❤️</div>
+        <h3>捐赠</h3>
+        <p>支持开源项目和教育指南。每一份贡献，无论大小，都很有价值。</p>
+        <a href="https://github.com/sponsors/your-username" target="_blank" rel="noopener" class="btn btn-donate">💛 立即捐赠</a>
+      </div>
+      <div class="support-card buy">
+        <div class="icon">🛒</div>
+        <h3>购买 / 订购</h3>
+        <p>需要安装、设置、定制或专属支持？立即下订单。</p>
+        <a href="https://your-domain.com/order" target="_blank" rel="noopener" class="btn btn-buy">🛒 下订单</a>
+      </div>
+    </div>
+
+    <div class="note">💡 要支持此处介绍的开源项目，您可以直接访问其 GitHub 页面并使用其赞助或捐赠链接。例如，Hiddify 提供多种支持选项（GitHub Sponsors、Patreon、Open Collective、Ko-fi 甚至比特币）[reference:31]。</div>
   </section>
 
   <!-- ================= RU ================= -->
   <section class="lang" id="ru" lang="ru" dir="ltr" hidden>
-    <h2>Полное пошаговое руководство по созданию частного VPN (бесплатно + для продажи)</h2>
-    <div class="warn">Руководство предназначено для образовательных целей. Вы несете ответственность за законное использование и соблюдение местных законов.</div>
+    <h2>Полное руководство по панелям управления VPN на PHP и Python</h2>
+    <div class="warn">⚠️ Это руководство предназначено для образовательных целей. Вы несете ответственность за законное использование и соблюдение местных законов.</div>
 
-    <h3>1) Общие предварительные требования</h3>
-    <ul>
-      <li>Клиентское устройство: Windows, Mac, Android или iOS.</li>
-      <li>Клиентское приложение: WireGuard, v2rayNG, Nekoray или sing-box.</li>
-      <li>Для серверных методов: VPS с доступом root или sudo.</li>
-    </ul>
+    <p>В этом руководстве описаны лучшие панели управления VPN с открытым исходным кодом, разработанные на <span class="badge-php">PHP</span> и <span class="badge-py">Python</span>, с пошаговыми инструкциями по установке. Эти панели позволяют управлять пользователями, продавать подписки и контролировать серверы.</p>
 
-    <h3>2) Полностью бесплатные методы</h3>
-    <p><strong>2.1 Cloudflare Workers (VLESS over WebSocket)</strong></p>
-    <ol>
-      <li>Создайте бесплатный аккаунт Cloudflare.</li>
-      <li>Создайте новый Worker в разделе Workers &amp; Pages.</li>
-      <li>Вставьте код проектов <code>Cloudflare-VLESS</code> или <code>edgetunnel</code> с GitHub.</li>
-      <li>Задайте переменные окружения, например <code>UUID</code> и <code>HOST</code>.</li>
-      <li>После развертывания импортируйте ссылку VLESS или QR-код в v2rayNG или sing-box.</li>
-    </ol>
-    <p><strong>2.2 Oracle Cloud Always Free</strong></p>
-    <ol>
-      <li>Зарегистрируйтесь в Oracle Cloud Free Tier.</li>
-      <li>Создайте Instance с Ubuntu 22.04/24.04.</li>
-      <li>Откройте нужные порты, например UDP 51820 или TCP 443, в Security List.</li>
-      <li>Подключитесь по SSH и выполните один из методов раздела 3.</li>
-    </ol>
+    <div class="img-placeholder">Обзор панели управления VPN (панель мониторинга, список пользователей, графики трафика, статус узлов)</div>
 
-    <h3>3) Личный сервер с автоматическими скриптами</h3>
-    <p><strong>3.1 Однострочный WireGuard:</strong></p>
-    <pre><code>curl -sSL https://raw.githubusercontent.com/pradeeparul2/simple-wireguard-setup/main/wireguard-install.sh | sudo bash</code></pre>
-    <p>Скачать конфигурацию клиента:</p>
-    <pre><code>curl -o client-config.zip http://&lt;SERVER_IP&gt;/client-config.zip</code></pre>
+    <h3>1) Панели на PHP</h3>
 
-    <p><strong>3.2 TunnelBypass (мультипротокол):</strong></p>
-    <pre><code>curl -fsSL https://raw.githubusercontent.com/abdelrahman30x/TunnelBypass/main/scripts/install.sh | bash</code></pre>
-    <p>Затем выполните <code>tunnelbypass</code> и выберите протокол, например <code>vless+reality</code>.</p>
+    <h4>1.1 VPNMarket (Laravel + Filament) — Лучший выбор для продаж и бизнеса</h4>
+    <p><strong>Описание:</strong> Полная экосистема для управления и продажи VPN, поддерживающая панели Marzban и X-UI. Включает автоматический Telegram-бот для продаж и приложение для Android.</p>
+    <p><strong>Требования:</strong> Ubuntu 22.04, домен, доступ root, PHP 8.1+, MySQL.</p>
+    <p><strong>Установка одной командой:</strong></p>
+    <pre><code>wget -O install.sh https://raw.githubusercontent.com/arvinvahed/VPNMarket/main/install.sh && sudo bash install.sh</code></pre>
+    <p>После установки откройте ваш домен в браузере и настройте панель администратора. Для подключения Telegram-бота введите токен BotFather в настройках.</p>
+    <div class="img-placeholder">Интерфейс VPNMarket (панель Laravel и Filament, меню управления пользователями и подписками)</div>
 
-    <p><strong>3.3 Docker-стек (AmneziaWG + Xray):</strong></p>
-    <pre><code>git clone https://github.com/seb0ch/vpn.git &amp;&amp; cd vpn
-sudo ./docker-install.sh
-sudo ./deploy.sh</code></pre>
+    <h4>1.2 Панель AmneziaVPN PHP — Управление WireGuard и Amnezia</h4>
+    <p><strong>Описание:</strong> Легкая веб-панель для управления серверами Amnezia AWG (на основе WireGuard), поддерживающая несколько протоколов, таких как WireGuard, OpenVPN, Shadowsocks и XRay VLESS. Построена на PHP 8.2+ и MySQL 8.0[reference:32].</p>
+    <p><strong>Требования:</strong> Docker и Docker Compose.</p>
+    <p><strong>Установка:</strong></p>
+    <pre><code>git clone https://github.com/infosave2007/amneziavpnphp.git
+cd amneziavpnphp
+cp .env.example .env
+docker compose up -d
+docker compose exec web composer install</code></pre>
+    <p>Доступ по адресу <code>http://localhost:8082</code>. Логин по умолчанию: <code>admin@amnez.ia</code> / <code>admin123</code> (смените немедленно).</p>
+    <div class="img-placeholder">Панель AmneziaVPN PHP (форма добавления сервера, список клиентов, генерация QR-кода, настройки протокола)</div>
 
-    <h3>4) Установка Xray VLESS + REALITY (самый устойчивый к блокировкам)</h3>
-    <pre><code>apt install git
-git clone https://github.com/0xevn/xray-reality-setup.git
-cd xray-reality-setup
-chmod +x xray-setup.sh
-sh xray-setup.sh</code></pre>
-    <p>В конце вы получите ссылку <code>vless://</code> и QR-код. Импортируйте их в v2rayNG, Nekoray или sing-box.</p>
+    <h4>1.3 OpenVPN Web Panel Manager — Мультипротокольное управление</h4>
+    <p><strong>Описание:</strong> Комплексная self-hosted веб-панель для управления серверами OpenVPN, Cisco AnyConnect, L2TP/IPsec, WireGuard и Sing-box. Поддерживает пользователей, реселлеров и многоузловые развертывания с полным API[reference:33].</p>
 
-    <h3>5) Система продаж и управления пользователями</h3>
-    <ul>
-      <li><strong>VPanel:</strong> панель управления и продаж с поддержкой Marzban и X-UI — <a href="https://github.com/lkacom/vpanel" target="_blank" rel="noopener">github.com/lkacom/vpanel</a></li>
-      <li><strong>VPNMarket:</strong> панель + Telegram-бот + Android-приложение — <a href="https://github.com/IranEclips/VPNMarket" target="_blank" rel="noopener">github.com/IranEclips/VPNMarket</a></li>
-      <li><strong>Hiddify Manager:</strong> многопользовательская панель с 20+ протоколами — <a href="https://github.com/hiddify/Hiddify-Manager" target="_blank" rel="noopener">github.com/hiddify/Hiddify-Manager</a></li>
-      <li><strong>Marzban:</strong> специализированная панель Xray — <a href="https://github.com/Gozargah/Marzban" target="_blank" rel="noopener">github.com/Gozargah/Marzban</a></li>
-    </ul>
-    <p>Установка VPNMarket:</p>
-    <pre><code>bash &lt;(curl -sL https://raw.githubusercontent.com/IranEclips/VPNMarket/main/install.sh)</code></pre>
-    <p>Установка Hiddify Manager:</p>
-    <pre><code>bash &lt;(curl -sL https://github.com/hiddify/Hiddify-Manager/raw/main/install.sh)</code></pre>
-    <p>Установка Marzban:</p>
+    <h3>2) Панели на Python</h3>
+
+    <h4>2.1 Marzban — Профессиональная панель Xray (Python + React)</h4>
+    <p><strong>Описание:</strong> Marzban — одна из самых популярных панелей управления прокси, созданная на Python и React.js и работающая на Xray-core. Предоставляет простой, но мощный интерфейс для управления сотнями прокси-аккаунтов[reference:34].</p>
+    <p><strong>Быстрая установка (Ubuntu 22.04/24.04):</strong></p>
     <pre><code>sudo bash -c "$(curl -sL https://github.com/Gozargah/Marzban-scripts/raw/master/marzban.sh)" @ install</code></pre>
-    <div class="note">Для продажи: после установки панели настройте Telegram-бота с токеном BotFather и подключите платежный шлюз. Ограничьте доступ администратора и используйте SSH-ключи.</div>
+    <div class="img-placeholder">Панель управления Marzban (графики трафика, управление пользователями, настройки узлов, ссылки подписок)</div>
 
-    <h3>6) Источники GitHub</h3>
-    <ul class="source-list">
-      <li><a href="https://github.com/abdelrahman30x/TunnelBypass" target="_blank" rel="noopener">TunnelBypass</a></li>
-      <li><a href="https://github.com/0xevn/xray-reality-setup" target="_blank" rel="noopener">Xray Reality Setup</a></li>
-      <li><a href="https://github.com/seb0ch/vpn" target="_blank" rel="noopener">seb0ch/vpn</a></li>
-      <li><a href="https://github.com/13556547/Cloudflare-VPN" target="_blank" rel="noopener">Cloudflare-VLESS</a></li>
-      <li><a href="https://github.com/lkacom/vpanel" target="_blank" rel="noopener">VPanel</a></li>
-      <li><a href="https://github.com/IranEclips/VPNMarket" target="_blank" rel="noopener">VPNMarket</a></li>
-      <li><a href="https://github.com/hiddify/Hiddify-Manager" target="_blank" rel="noopener">Hiddify Manager</a></li>
-      <li><a href="https://github.com/Gozargah/Marzban" target="_blank" rel="noopener">Marzban</a></li>
+    <h4>2.2 Hiddify Manager — Многопользовательская панель с 20+ протоколами</h4>
+    <p><strong>Описание:</strong> Многопользовательская панель против цензуры с простой установкой, поддерживающая более 20 протоколов (включая Reality и Telegram Proxy). Это приложение Flask, которое управляет бэкендами Xray и SingBox через единый веб-интерфейс[reference:35][reference:36].</p>
+    <p><strong>Установка:</strong></p>
+    <pre><code>bash <(curl -sL https://github.com/hiddify/Hiddify-Manager/raw/main/install.sh)</code></pre>
+
+    <h4>2.3 RVG (FastAPI) — Легкий и модульный шлюз</h4>
+    <p><strong>Описание:</strong> Легкий асинхронный мультипротокольный шлюз на FastAPI, одновременно поддерживающий VLESS, Trojan, Shadowsocks и MTProto. Включает встроенную панель администратора для управления пользователями и статусом сервиса, предназначен для быстрого развертывания на Railway[reference:37].</p>
+
+    <h4>2.4 v2pi (FastAPI + Svelte) — Шлюз Xray для локальной сети</h4>
+    <p><strong>Описание:</strong> Легкая панель, превращающая headless-устройство Linux (например, Raspberry Pi) в управляемый шлюз Xray VPN. Поддерживает настройку Anti-DPI, маршрутизацию на основе правил (geoip/geosite), отказоустойчивость и kill-switch[reference:38].</p>
+
+    <h3>3) Краткое сравнение</h3>
+    <ul>
+      <li><strong>VPNMarket (PHP):</strong> Лучший выбор для продаж и бизнеса (Telegram-бот + приложение для Android + платежный шлюз).</li>
+      <li><strong>AmneziaVPN PHP:</strong> Лучший выбор для управления серверами WireGuard/Amnezia с простым Docker UI.</li>
+      <li><strong>Marzban (Python):</strong> Лучший выбор для профессионального управления Xray с высокой масштабируемостью и большим сообществом.</li>
+      <li><strong>Hiddify (Python):</strong> Лучший выбор для поддержки widest диапазона протоколов и сопротивления цензуре.</li>
+      <li><strong>RVG / v2pi (Python):</strong> Лучший выбор для легких проектов, быстрого развертывания и шлюзов локальной сети.</li>
     </ul>
+
+    <div class="note">🔒 <strong>Совет по безопасности:</strong> После установки любой панели смените пароли по умолчанию, ограничьте доступ по SSH с помощью ключей, включите SSL (HTTPS) и используйте брандмауэр (UFW).</div>
+
+    <h3>4) Донат и поддержка покупкой</h3>
+    <p>Если это руководство было полезным и вы хотите поддержать дальнейшее создание образовательного контента, вы можете использовать варианты ниже. Если вам нужна кастомизированная версия или профессиональная установка и настройка, отправьте запрос.</p>
+
+    <div class="support-section">
+      <div class="support-card donate">
+        <div class="icon">❤️</div>
+        <h3>Донат</h3>
+        <p>Поддержите проекты с открытым исходным кодом и образовательные руководства. Любой вклад, каким бы малым он ни был, ценен.</p>
+        <a href="https://github.com/sponsors/your-username" target="_blank" rel="noopener" class="btn btn-donate">💛 Поддержать</a>
+      </div>
+      <div class="support-card buy">
+        <div class="icon">🛒</div>
+        <h3>Купить / Заказать</h3>
+        <p>Нужна установка, настройка, кастомизация или выделенная поддержка? Оформите заказ сейчас.</p>
+        <a href="https://your-domain.com/order" target="_blank" rel="noopener" class="btn btn-buy">🛒 Оформить заказ</a>
+      </div>
+    </div>
+
+    <div class="note">💡 Чтобы поддержать представленные здесь проекты с открытым исходным кодом, вы можете посетить их страницы на GitHub и использовать их ссылки Sponsor или Donate. Например, Hiddify предлагает различные варианты поддержки (GitHub Sponsors, Patreon, Open Collective, Ko-fi и даже Bitcoin)[reference:39].</div>
   </section>
 
   <footer>
@@ -544,10 +714,16 @@ sh xray-setup.sh</code></pre>
     const rtlLangs = ['fa', 'ar'];
     document.documentElement.lang = lang;
     document.documentElement.dir = rtlLangs.includes(lang) ? 'rtl' : 'ltr';
+    // ذخیره انتخاب زبان در localStorage برای بازدیدهای بعدی
+    try { localStorage.setItem('vpnGuideLang', lang); } catch(e) {}
   }
 
-  // نمایش پیش‌فرض فارسی
-  showLang('fa');
+  // بارگذاری زبان ذخیره‌شده یا پیش‌فرض فارسی
+  (function initLang() {
+    let saved = 'fa';
+    try { saved = localStorage.getItem('vpnGuideLang') || 'fa'; } catch(e) {}
+    showLang(saved);
+  })();
 </script>
 </body>
 </html>
